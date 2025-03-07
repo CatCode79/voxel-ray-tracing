@@ -1,0 +1,77 @@
+[workspace]
+members = [
+    "crates/voxel_config",
+    "crates/voxel_math",
+    "crates/voxel_render",
+    "crates/voxel_winput",
+]
+exclude = []
+
+[workspace.package]
+authors = ["CatCode79"]
+edition = "2024"
+license = "MIT"
+publish = false
+rust-version = "1.85"
+version = "0.1.0"
+
+[workspace.dependencies]
+bitflags = "2"
+env_logger = { version = "0.11", default-features = false, features = ["auto-color", "humantime"] }
+fastrand = "2"
+glam = "0.30"
+hashbrown = "0.15"
+log = { version = "0.4", features = ["max_level_trace", "release_max_level_error"] }
+nanoserde = "0.1"
+num_cpus = "1"
+pollster = "0.4"
+profiling = { version = "1", default-features = false , features = ["profile-with-tracy"]}
+raw-window-handle = "0.6"
+wgpu = { version = "24", default-features = false, features = ["wgsl", "dx12"] }  # spirv
+wgt = { version = "24", package = "wgpu-types"}
+
+[package]
+name = "voxel-ray-tracing"
+description = "Voxel world ray traced and path traced"
+authors.workspace = true
+version.workspace = true
+edition.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+
+[dependencies]
+voxel_config = { path = "crates/voxel_config" }
+voxel_math = { path = "crates/voxel_math" }
+voxel_render = { path = "crates/voxel_render" }
+voxel_winput = { path = "crates/voxel_winput" }
+
+env_logger = { workspace = true }
+fastrand = { workspace = true }
+glam = { workspace = true }
+log = { workspace = true }
+num_cpus = { workspace = true }
+profiling = { workspace = true }
+
+[profile.dev]
+opt-level = 1
+split-debuginfo = "unpacked"
+lto = false # Different values slows compilation time too much
+#incremental = true # True value gives faster compilation, but better to disable this
+codegen-units = 16
+
+[profile.dev.package."*"]
+inherits = "dev"
+
+[profile.release]
+opt-level = 3
+debug = false
+strip = true
+debug-assertions = false
+overflow-checks = false
+lto = true
+panic = "abort"
+incremental = false
+codegen-units = 1
+
+[profile.release.package."*"]
+inherits = "release"

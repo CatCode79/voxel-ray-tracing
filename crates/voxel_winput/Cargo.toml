@@ -1,0 +1,29 @@
+[package]
+name = "voxel_winput"
+description = "Window handling"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+bitflags = { workspace = true }
+hashbrown = { workspace = true }
+glam = { workspace = true }
+log = { workspace = true }
+raw-window-handle = { workspace = true }
+
+[dependencies.windows-sys]
+version = "0.52"
+features = [
+    "Win32_Devices_HumanInterfaceDevice",
+    "Win32_Foundation",
+    "Win32_Graphics_Gdi",
+    "Win32_System_LibraryLoader",
+    "Win32_System_SystemServices",
+    "Win32_UI_Input_KeyboardAndMouse",
+    "Win32_UI_TextServices",
+    "Win32_UI_WindowsAndMessaging",
+]

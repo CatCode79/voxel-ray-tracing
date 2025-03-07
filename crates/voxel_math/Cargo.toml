@@ -1,0 +1,13 @@
+[package]
+name = "voxel_math"
+description = "Math library"
+authors.workspace = true
+edition.workspace = true
+license.workspace = true
+publish.workspace = true
+rust-version.workspace = true
+version.workspace = true
+
+[dependencies]
+glam = { workspace = true }
+wgt = { workspace = true }
