@@ -22,17 +22,17 @@ fastrand = "2"
 glam = "0.30"
 hashbrown = "0.15"
 log = { version = "0.4", features = ["max_level_trace", "release_max_level_error"] }
-nanoserde = "0.1"
+nanoserde = "0.2"
 num_cpus = "1"
 pollster = "0.4"
 profiling = { version = "1", default-features = false , features = ["profile-with-tracy"]}
 raw-window-handle = "0.6"
-wgpu = { version = "24", default-features = false, features = ["wgsl", "dx12"] }  # spirv
+wgpu = { version = "24", default-features = false, features = ["wgsl", "dx12"] }
 wgt = { version = "24", package = "wgpu-types"}
 
 [package]
-name = "voxel-ray-tracing"
-description = "Voxel world ray traced and path traced"
+name = "voxel-path-tracer"
+description = "Voxel open simplex world path traced"
 authors.workspace = true
 version.workspace = true
 edition.workspace = true
@@ -55,7 +55,7 @@ profiling = { workspace = true }
 [profile.dev]
 opt-level = 1
 split-debuginfo = "unpacked"
-lto = false # Different values slows compilation time too much
+lto = false # Different values than false slows compilation time too much
 #incremental = true # True value gives faster compilation, but better to disable this
 codegen-units = 16
 
