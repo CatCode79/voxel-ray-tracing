@@ -1,5 +1,5 @@
 # voxel-ray-tracing:
-A path traced voxel world made with wgpu.<br>
+A ray traced voxel world made with wgpu.<br>
 
 This repo is a fork of [MasonFeurer/VoxelRayTracing](https://github.com/MasonFeurer/VoxelRayTracing)<br>
 Specifically, I used the [Commit 583b610](https://github.com/MasonFeurer/VoxelRayTracing/tree/583b6109fcd6708b21c7db1f77590eca538cb41b)<br>
