@@ -19,7 +19,7 @@ pub(crate) fn request_adapter(
 ) -> Result<Adapter, String> {
     log_possible_adapters(supported_backends(), &instance);
 
-    let a = async {
+    let result = async {
         instance
             .request_adapter(&RequestAdapterOptions {
                 power_preference: PowerPreference::HighPerformance,
@@ -30,12 +30,9 @@ pub(crate) fn request_adapter(
     }
     .block_on();
 
-    let Some(a) = a else {
-        return Err("No adapters were found with requested options.".to_string());
-    };
-
-    log_picked_adapter(&a);
-    Ok(a)
+    let adapter = result.map_err(|e| format!("{e}."))?;
+    log_picked_adapter(&adapter);
+    Ok(adapter)
 }
 
 /// Log all the adapters' info.
@@ -80,8 +77,8 @@ pub(crate) fn request_device(
                     },
                     label: None,
                     memory_hints: MemoryHints::Performance,
+                    trace: Default::default(),
                 },
-                None,
             )
             .await
     }
