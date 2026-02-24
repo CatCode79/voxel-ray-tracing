@@ -1,16 +1,18 @@
 //= MODS =====================================================================
 
+extern crate core;
+
 mod buffers;
-pub(crate) mod gpu;
+mod gpu;
 mod renderer;
 mod shader;
-pub(crate) mod texture;
+mod texture;
+mod passes;
 
 //= RE-EXPORTS ===============================================================
 
 pub use buffers::*;
 pub use renderer::*;
-pub use shader::*;
 
 //= BACKENDS =================================================================
 

@@ -84,13 +84,6 @@ fn main() -> process::ExitCode {
                 .unwrap_or_else(|e| handle_error_and_panic(e));
         }
 
-        //- Frame Present ----------------------------------------------------
-
-        {
-            profiling::scope!("Present");
-            renderer.present();
-        }
-
         //- Frame Sync -------------------------------------------------------
 
         {

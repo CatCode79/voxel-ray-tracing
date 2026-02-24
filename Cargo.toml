@@ -27,8 +27,8 @@ num_cpus = "1"
 pollster = "0.4"
 profiling = { version = "1", default-features = false , features = ["profile-with-tracy"]}
 raw-window-handle = "0.6"
-wgpu = { version = "25", default-features = false, features = ["wgsl", "dx12"] }
-wgt = { version = "25", package = "wgpu-types"}
+wgpu = { version = "26", default-features = false, features = ["wgsl", "dx12"] }
+wgt = { version = "26", package = "wgpu-types"}
 
 [package]
 name = "voxel-path-tracer"

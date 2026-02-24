@@ -11,8 +11,6 @@ use wgpu::{
 
 //= ADAPTER ==================================================================
 
-//ContextWgpuCore
-
 pub(crate) fn request_adapter(
     instance: Instance,
     surface: &Surface<'static>,

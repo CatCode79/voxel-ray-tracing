@@ -2,7 +2,7 @@
 
 #[derive(Debug, Default)]
 pub(crate) struct FrameData {
-    counter: u32,   // Used to randomize on shaders
+    counter: u32,   // Used to randomise on shaders
     accumulator: u32, // Used to reset the info accumulation on shaders
 }
 

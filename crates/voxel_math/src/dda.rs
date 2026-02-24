@@ -5,10 +5,10 @@ use glam::{IVec3, Vec3};
 //= DDA ======================================================================
 
 /// Takes a rotation (the rotation around the X, Y, and Z axis), and
-/// creates a normalized vector ray in the facing direction.
+/// creates a normalised vector ray in the facing direction.
 /// the rotation values should be in radians (0..TAU)
 pub fn axis_rot_to_ray(rot: Vec3) -> Vec3 {
-    // the Z rotation doesn't effect the ray
+    // the Z rotation doesn't affect the ray
     // the Y rotation effects the ray's X and Z
     // the X rotation effects the ray's X, Y, and Z
 

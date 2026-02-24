@@ -21,7 +21,7 @@ pub struct Config {
     pub surface_width: u16,
     /// The minimum height of the drawable window.
     pub surface_height: u16,
-    /// The window starts maximized and fullscreen-borderless otherwise
+    /// The window starts maximised and fullscreen-borderless otherwise
     /// windowed with decorations.
     pub maximized: bool,
 }

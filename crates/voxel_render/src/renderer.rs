@@ -3,9 +3,10 @@
 use crate::gpu::{
     create_instance, create_surface, create_surface_config, request_adapter, request_device,
 };
+use crate::passes::{DenoiserPass, PathTracerPass, RayTracerPass, ScreenPass};
 use crate::texture::{TextureHandler, RESULT_TEX_FORMAT, RESULT_TEX_USAGES};
 use crate::{
-    Buffers, Camera, DenoiserShader, FrameData, RayTracerShader, Material, Node, PathTracerShader, ScreenShader, Settings,
+    Buffers, Camera, FrameData, Material, Node, Settings,
     WorldData,
 };
 
@@ -30,12 +31,11 @@ pub struct Renderer {
     denoised_texture: TextureHandler,
     buffers: Buffers,
     frame_data: FrameData,
-    output: Option<SurfaceTexture>,
 
-    ray_tracer: RayTracerShader,
-    path_tracer: PathTracerShader,
-    denoiser_shader: DenoiserShader,
-    screen_shader: ScreenShader,
+    ray_tracer_pass: RayTracerPass,
+    path_tracer_pass: PathTracerPass,
+    denoiser_pass: DenoiserPass,
+    screen_pass: ScreenPass,
 }
 
 impl Renderer {
@@ -91,11 +91,11 @@ impl Renderer {
         );
 
         let ray_tracer =
-            RayTracerShader::new(&device, &normal_texture, &buffers);
+            RayTracerPass::new(&device, &normal_texture, &buffers);
         let path_tracer =
-            PathTracerShader::new(&device, &result_texture, &prev_result_texture, &buffers);
-        let denoiser_shader = DenoiserShader::new(&device, &result_texture, &denoised_texture);
-        let screen_shader = ScreenShader::new(&device, &denoised_texture, surface_config.format);
+            PathTracerPass::new(&device, &result_texture, &prev_result_texture, &buffers);
+        let denoiser_shader = DenoiserPass::new(&device, &result_texture, &denoised_texture);
+        let screen_shader = ScreenPass::new(&device, &denoised_texture, surface_config.format);
 
         Ok(Self {
             surface,
@@ -109,12 +109,11 @@ impl Renderer {
             denoised_texture,
             buffers,
             frame_data: FrameData::default(),
-            output: None,
 
-            ray_tracer,
-            path_tracer,
-            screen_shader,
-            denoiser_shader,
+            ray_tracer_pass: ray_tracer,
+            path_tracer_pass: path_tracer,
+            screen_pass: screen_shader,
+            denoiser_pass: denoiser_shader,
         })
     }
 
@@ -129,9 +128,8 @@ impl Renderer {
             .create_command_encoder(&CommandEncoderDescriptor::default())
     }
 
-    pub fn submit_once(&mut self, command_buffer: CommandBuffer, output: SurfaceTexture) {
+    pub fn submit_once(&mut self, command_buffer: CommandBuffer) {
         self.queue.submit(iter::once(command_buffer));
-        self.output = Some(output);
     }
 
     //= BUFFERS ==============================================================
@@ -183,23 +181,23 @@ impl Renderer {
             self.denoised_texture =
                 TextureHandler::new(&self.device, new_size, RESULT_TEX_FORMAT, RESULT_TEX_USAGES);
 
-            self.ray_tracer.recreate_bind_group(
+            self.ray_tracer_pass.recreate_bind_group(
                 &self.device,
                 &self.normal_texture,
                 &self.buffers,
             );
-            self.path_tracer.recreate_bind_group(
+            self.path_tracer_pass.recreate_bind_group(
                 &self.device,
                 &self.result_texture,
                 &self.prev_result_texture,
                 &self.buffers,
             );
-            self.denoiser_shader.recreate_bind_group(
+            self.denoiser_pass.recreate_bind_group(
                 &self.device,
                 &self.result_texture,
                 &self.denoised_texture,
             );
-            self.screen_shader
+            self.screen_pass
                 .recreate_bind_group(&self.device, &self.denoised_texture);
         }
 
@@ -233,7 +231,8 @@ impl Renderer {
     }
 
     pub fn update(&mut self, camera: Camera) -> Result<(), String> {
-        let (output, view) = self.get_output().map_err(|e| e.to_string())?;
+        profiling::scope!("Renderer.update()");
+        let (output_texture, output_view) = self.get_output().map_err(|e| e.to_string())?;
         let surface_size = self.surface_size();
         let mut encoder = self.create_command_encoder();
 
@@ -244,10 +243,10 @@ impl Renderer {
         }
 
         let workgroups = surface_size / 8;
-        self.ray_tracer.encode_pass(&mut encoder, workgroups);
-        self.path_tracer.encode_pass(&mut encoder, workgroups);
-        self.denoiser_shader.encode_pass(&mut encoder, workgroups);
-        self.screen_shader.encode_pass(&mut encoder, &view);
+        self.ray_tracer_pass.encode_pass(&mut encoder, workgroups);
+        self.path_tracer_pass.encode_pass(&mut encoder, workgroups);
+        self.denoiser_pass.encode_pass(&mut encoder, workgroups);
+        self.screen_pass.encode_pass(&mut encoder, &output_view);
 
         encoder.copy_texture_to_texture(
             wgpu::TexelCopyTextureInfo {
@@ -269,7 +268,12 @@ impl Renderer {
             },
         );
 
-        self.submit_once(encoder.finish(), output);
+        self.submit_once(encoder.finish());
+
+        profiling::scope!("output_texture.present()");
+        {
+            output_texture.present();
+        }
 
         Ok(())
     }
@@ -289,11 +293,5 @@ impl Renderer {
             .texture
             .create_view(&TextureViewDescriptor::default());
         Ok((output, view))
-    }
-
-    pub fn present(&mut self) {
-        if self.output.is_some() {
-            self.output.take().unwrap().present();
-        }
     }
 }

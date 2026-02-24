@@ -21,6 +21,6 @@ voxel_math = { path = "../voxel_math" }
 glam = { workspace = true }
 log = { workspace = true }
 pollster = { workspace = true }
-#profiling = { workspace = true }
+profiling = { workspace = true }
 raw-window-handle = { workspace = true }
 wgpu = { workspace = true }

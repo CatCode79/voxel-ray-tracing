@@ -28,8 +28,9 @@ pub static VOXEL_NAMES: &[&str] = &[
 
 //= VOXEL MATERIALS ==========================================================
 
+#[rustfmt::skip]
 pub static VOXEL_MATERIALS: &[Material] = &[
-    Material::new_empty(),                                  // Air
+    Material::new_empty(),                                               // Air
     Material::new_solid([0.40, 0.40, 0.40], 1.0),           // Stone
     Material::new_solid([0.40, 0.20, 0.00], 1.0),           // Dirt
     Material::new_solid([0.011, 0.58, 0.11], 1.0),          // Grass
@@ -51,7 +52,7 @@ pub static VOXEL_MATERIALS: &[Material] = &[
     Material::new_solid([0.0, 0.30, 0.0], 1.0),             // Cactus
     Material::new_solid([0.83, 0.68, 0.22], 0.3),           // Gold
     Material::new_solid([1.0; 3], 0.0),                     // Mirror
-    Material::new_solid([1.0; 3], 1.0).emit(5.0),           // Bright
+    Material::new_solid([1.0; 3], 1.0).emit(5.0),   // Bright
 ];
 
 //= VOXEL ====================================================================
