@@ -40,7 +40,7 @@ impl ScreenPass {
 		let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
 			label: Some("output-tex-shader.pipeline-layout"),
 			bind_group_layouts: &[&bind_group_layout],
-			push_constant_ranges: &[],
+			immediate_size: 0,
 		});
 		let pipeline = device.create_render_pipeline(&RenderPipelineDescriptor {
 			label: Some("output-tex-shader.pipeline"),
@@ -64,8 +64,8 @@ impl ScreenPass {
 			primitive: PrimitiveState::default(),
 			depth_stencil: None,
 			multisample: MultisampleState::default(),
-			multiview: None,
 			cache: None,
+			multiview_mask: None,
 		});
 
 		Self {
@@ -109,6 +109,7 @@ impl ScreenPass {
 			depth_stencil_attachment: None,
 			timestamp_writes: None,
 			occlusion_query_set: None,
+			multiview_mask: None,
 		});
 		pass.set_pipeline(&self.pipeline);
 		pass.set_bind_group(0, &self.bind_group, &[]);

@@ -41,7 +41,7 @@ impl DenoiserPass {
 		let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
 			label: Some("#denoiser.pipeline-layout"),
 			bind_group_layouts: &[&bind_group_layout],
-			push_constant_ranges: &[],
+			immediate_size: 0,
 		});
 		let pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
 			label: Some("#denoiser.pipeline"),

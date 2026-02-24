@@ -3,11 +3,7 @@
 use crate::supported_backends;
 
 use pollster::FutureExt;
-use wgpu::{
-    rwh, Adapter, CompositeAlphaMode, Device, DeviceDescriptor, Features, Instance,
-    InstanceDescriptor, InstanceFlags, Limits, MemoryHints, PowerPreference, PresentMode, Queue,
-    RequestAdapterOptions, Surface, SurfaceConfiguration, SurfaceTargetUnsafe, TextureUsages,
-};
+use wgpu::{rwh, Adapter, CompositeAlphaMode, Device, DeviceDescriptor, ExperimentalFeatures, Features, Instance, InstanceDescriptor, InstanceFlags, Limits, MemoryHints, PowerPreference, PresentMode, Queue, RequestAdapterOptions, Surface, SurfaceConfiguration, SurfaceTargetUnsafe, TextureUsages, Trace};
 
 //= ADAPTER ==================================================================
 
@@ -28,7 +24,7 @@ pub(crate) fn request_adapter(
     }
     .block_on();
 
-    let adapter = result.map_err(|e| format!("{e}."))?;
+    let adapter = result.map_err(|e| format!("{e:?}({e})."))?;
     log_picked_adapter(&adapter);
     Ok(adapter)
 }
@@ -37,6 +33,7 @@ pub(crate) fn request_adapter(
 fn log_possible_adapters(backends: wgpu::Backends, wgpu_instance: &Instance) {
     for (i, adapter) in wgpu_instance
         .enumerate_adapters(backends)
+        .block_on()
         .iter()
         .enumerate()
     {
@@ -75,7 +72,8 @@ pub(crate) fn request_device(
                     },
                     label: None,
                     memory_hints: MemoryHints::Performance,
-                    trace: Default::default(),
+                    trace: Trace::default(),
+                    experimental_features: ExperimentalFeatures::default(),
                 },
             )
             .await

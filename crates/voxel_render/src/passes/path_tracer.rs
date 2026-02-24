@@ -53,7 +53,7 @@ impl PathTracerPass {
 		let pipeline_layout = device.create_pipeline_layout(&PipelineLayoutDescriptor {
 			label: Some("#pathtracer.pipeline-layout"),
 			bind_group_layouts: &[&bind_group_layout],
-			push_constant_ranges: &[],
+			immediate_size: 0,
 		});
 		let pipeline = device.create_compute_pipeline(&ComputePipelineDescriptor {
 			label: Some("#pathtracer.pipeline"),

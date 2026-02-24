@@ -1,10 +1,7 @@
 //= IMPORTS ==================================================================
 
 use glam::U16Vec2;
-use wgpu::{
-    AddressMode, Device, Extent3d, FilterMode, Sampler, SamplerDescriptor, TextureDescriptor,
-    TextureDimension, TextureFormat, TextureUsages, TextureView, TextureViewDescriptor,
-};
+use wgpu::{AddressMode, Device, Extent3d, FilterMode, MipmapFilterMode, Sampler, SamplerDescriptor, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages, TextureView, TextureViewDescriptor};
 
 //= CONSTANTS ================================================================
 
@@ -52,7 +49,7 @@ impl TextureHandler {
             address_mode_w: AddressMode::ClampToEdge,
             mag_filter: FilterMode::Nearest,
             min_filter: FilterMode::Linear,
-            mipmap_filter: FilterMode::Nearest,
+            mipmap_filter: MipmapFilterMode::Nearest,
             lod_min_clamp: 1.0,
             lod_max_clamp: 1.0,
             compare: None,
