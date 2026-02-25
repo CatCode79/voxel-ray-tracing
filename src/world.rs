@@ -60,11 +60,9 @@ impl World {
         }
     }
 
-    #[inline(always)]
     pub fn min(&self) -> IVec3 {
         self.min
     }
-    #[inline(always)]
     pub fn max(&self) -> IVec3 {
         self.min + IVec3::splat(self.size as i32)
     }
@@ -136,24 +134,20 @@ impl World {
         }
     }
 
-    #[inline(always)]
     pub fn get_node(&self, idx: u32) -> Node {
         self.nodes[idx as usize]
     }
 
-    #[inline(always)]
     pub fn swap_nodes(&mut self, a: u32, b: u32) {
         let b_node = self.nodes[b as usize];
         self.nodes[b as usize] = self.nodes[a as usize];
         self.nodes[a as usize] = b_node;
     }
 
-    #[inline(always)]
     pub fn mut_node(&mut self, idx: u32) -> &mut Node {
         &mut self.nodes[idx as usize]
     }
 
-    #[inline(always)]
     pub fn free_nodes(&mut self, start: u32) {
         if start < self.start_search {
             self.start_search = start;
@@ -163,7 +157,6 @@ impl World {
         }
     }
 
-    #[inline(always)]
     pub fn free_node(&mut self, idx: u32) {
         self.nodes[idx as usize].set_used_flag(false);
         if self.nodes[idx as usize].is_split() {

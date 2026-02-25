@@ -67,11 +67,11 @@ use std::mem;
         // checking the extension flag of the scancode. NumLock is 0xE045, Pause is 0x0045.
         //
         // However in this event, both keys are reported as 0x0045 even on modern hardware.
-        // Therefore we use the virtual key instead to determine whether it's a NumLock and
+        // Therefore, we use the virtual key instead to determine whether it's a NumLock and
         // set the KeyCode accordingly.
         //
         // For more on this, read the article by Raymond Chen, titled:
-        // "Why does Ctrl+ScrollLock cancel dialogs?"
+        // "Why does Ctrl+ScrollLock cancel dialogues?"
         // https://devblogs.microsoft.com/oldnewthing/20080211-00/?p=23503
         Some(KeyCode::NumLock)
     } else {

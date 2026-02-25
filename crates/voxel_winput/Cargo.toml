@@ -1,6 +1,6 @@
 [package]
 name = "voxel_winput"
-description = "Window handling"
+description = "Window and input handling"
 authors.workspace = true
 edition.workspace = true
 license.workspace = true
@@ -27,3 +27,6 @@ features = [
     "Win32_UI_TextServices",
     "Win32_UI_WindowsAndMessaging",
 ]
+
+[lints]
+workspace = true

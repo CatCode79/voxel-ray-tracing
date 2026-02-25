@@ -8,13 +8,6 @@ publish.workspace = true
 rust-version.workspace = true
 version.workspace = true
 
-[lib]
-
-[features]
-default = []
-debug = []
-wgsl = []
-
 [dependencies]
 voxel_math = { path = "../voxel_math" }
 
@@ -24,3 +17,6 @@ pollster = { workspace = true }
 profiling = { workspace = true }
 raw-window-handle = { workspace = true }
 wgpu = { workspace = true }
+
+[lints]
+workspace = true

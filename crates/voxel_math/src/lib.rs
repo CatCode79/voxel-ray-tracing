@@ -34,18 +34,15 @@ pub struct BitField(u32);
 impl BitField {
     pub const ZERO: Self = Self(0);
 
-    #[inline(always)]
     pub fn raw(self) -> u32 {
         self.0
     }
 
-    #[inline(always)]
     pub fn set(&mut self, data: u32, len: u32, offset: u32) {
         let mask = !(!0 << len) << offset;
         self.0 = (self.0 & !mask) | (data << offset);
     }
 
-    #[inline(always)]
     pub fn get(self, len: u32, offset: u32) -> u32 {
         let mask = !(!0 << len) << offset;
         (self.0 & mask) >> offset

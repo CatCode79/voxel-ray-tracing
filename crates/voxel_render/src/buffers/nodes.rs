@@ -62,46 +62,37 @@ impl Node {
         rs
     }
 
-    #[inline(always)]
     pub fn set_used_flag(&mut self, f: bool) {
         self.0.set(f as u32, 1, 30)
     }
-    #[inline(always)]
     pub fn is_used(self) -> bool {
         self.0.get(1, 30) == 1
     }
 
-    #[inline(always)]
     pub fn set_split_flag(&mut self, f: bool) {
         self.0.set(f as u32, 1, 31)
     }
-    #[inline(always)]
     pub fn is_split(self) -> bool {
         self.0.get(1, 31) == 1
     }
 
-    #[inline(always)]
     pub fn get_voxel(self) -> Voxel {
         Voxel(self.0.get(8, 0) as u8)
     }
-    #[inline(always)]
     pub fn set_voxel(&mut self, voxel: Voxel) {
         self.0.set(voxel.0 as u32, 8, 0)
     }
 
-    #[inline(always)]
     pub fn set_first_child(&mut self, first_child: u32) {
         debug_assert!(first_child == 0 || ((first_child - 1) % 8) == 0);
         let first_child = (first_child - 1) / 8;
 
         self.0.set(first_child, 30, 0)
     }
-    #[inline(always)]
     pub fn first_child(self) -> u32 {
         self.0.get(30, 0) * 8 + 1
     }
 
-    #[inline(always)]
     pub fn get_child(self, idx: u32) -> u32 {
         self.first_child() + idx
     }

@@ -86,16 +86,13 @@ impl Voxel {
     pub const MIRROR: Self = Self(21);
     pub const BRIGHT: Self = Self(22);
 
-    #[inline(always)]
     pub fn display_name(&self) -> &'static str {
         VOXEL_NAMES[self.0 as usize]
     }
 
-    #[inline(always)]
     pub fn is_empty(self) -> bool {
         self == Self::AIR || self == Self::WATER
     }
-    #[inline(always)]
     pub fn is_solid(self) -> bool {
         match self {
             Self::AIR => false,
@@ -107,7 +104,6 @@ impl Voxel {
         }
     }
 
-    #[inline(always)]
     pub fn viscosity(self) -> f32 {
         match self {
             Self::AIR => 1.0,

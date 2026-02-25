@@ -11,3 +11,6 @@ version.workspace = true
 [dependencies]
 glam = { workspace = true }
 wgt = { workspace = true }
+
+[lints]
+workspace = true

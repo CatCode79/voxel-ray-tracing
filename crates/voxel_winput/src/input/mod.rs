@@ -23,7 +23,7 @@ use bitflags::bitflags;
 bitflags! {
     #[derive(Clone, Debug, Default)]
     pub struct InputFlags: u8 {
-        const ExtendedKey = 0b00000001;
-        const Released = 0b00000010;
+        const ExtendedKey = 0b_0000_0001;
+        const Released = 0b_0000_0010;
     }
 }

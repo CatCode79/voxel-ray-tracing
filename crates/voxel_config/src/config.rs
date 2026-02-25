@@ -31,17 +31,17 @@ impl Config {
 
     /// Loads a config file, path is chosen internally by some default paths.
     /// Returns a config object or error otherwise.
-    pub(crate) fn load(filename: &str) -> Result<Config, String> {
+    pub(crate) fn load(filename: &str) -> Result<Self, String> {
         let filepath = filename;
 
         let contents = match read_to_string(filepath) {
             Ok(c) => c,
-            Err(e) => return Err(format!("{}: {}", e.to_string(), filepath)),
+            Err(e) => return Err(format!("{e}: {filepath}")),
         };
 
         match DeJson::deserialize_json(contents.as_str()) {
             Ok(c) => Ok(c),
-            Err(e) => return Err(format!("{}: {}", e.to_string(), filepath)),
+            Err(e) => Err(format!("{e}: {filepath}")),
         }
     }
 
@@ -49,10 +49,11 @@ impl Config {
     ///
     /// If the file is not found then a Config object with default values
     /// returns.
-    pub fn load_or_default(filename: &str) -> Config {
-        Config::load(filename).unwrap_or_else(|e| {
-            log::error!("{:?}", e);
-            Config::default()
+    #[must_use]
+    pub fn load_or_default(filename: &str) -> Self {
+        Self::load(filename).unwrap_or_else(|e| {
+            log::error!("{e:?}");
+            Self::default()
         })
     }
 
@@ -65,15 +66,15 @@ impl Config {
         let filepath = filename;
         let contents = SerJson::serialize_json(self);
         match write(filepath, contents) {
-            Ok(_) => Ok(()),
-            Err(e) => return Err(format!("{}: {}", e.to_string(), filepath)),
+            Ok(()) => Ok(()),
+            Err(e) => Err(format!("{e}: {filepath}")),
         }
     }
 }
 
 impl Default for Config {
     fn default() -> Self {
-        Config {
+        Self {
             surface_width: MIN_WIDTH,
             surface_height: MIN_HEIGHT,
             maximized: false,

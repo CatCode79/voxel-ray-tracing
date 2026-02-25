@@ -8,11 +8,11 @@ members = [
 exclude = []
 
 [workspace.package]
-authors = ["CatCode79"]
+authors = ["MasonFeurer", "CatCode79"]
 edition = "2024"
 license = "MIT"
 publish = false
-rust-version = "1.85"
+rust-version = "1.93"
 version = "0.1.0"
 
 [workspace.dependencies]
@@ -27,8 +27,20 @@ num_cpus = "1"
 pollster = "0.4"
 profiling = { version = "1", default-features = false , features = ["profile-with-tracy"]}
 raw-window-handle = "0.6"
-wgpu = { version = "28", default-features = false, features = ["wgsl", "dx12"] }
+wgpu = { version = "28", default-features = false, features = ["wgsl", "dx12", "vulkan"] }
 wgt = { version = "28", package = "wgpu-types"}
+
+[workspace.lints.clippy]
+cargo = { level = "warn", priority = -1 }
+complexity = { level = "warn", priority = -1 }
+correctness = { level = "warn", priority = -1 }
+nursery = { level = "warn", priority = -1 }
+pedantic = { level = "warn", priority = -1 }
+perf = { level = "warn", priority = -1 }
+style = { level = "warn", priority = -1 }
+suspicious = { level = "warn", priority = -1 }
+
+doc_markdown = "allow"
 
 [package]
 name = "voxel-path-tracer"
@@ -54,10 +66,15 @@ profiling = { workspace = true }
 
 [profile.dev]
 opt-level = 1
-split-debuginfo = "unpacked"
-lto = false # Different values than false slows compilation time too much
-#incremental = true # True value gives faster compilation, but better to disable this
-codegen-units = 16
+debug = true
+split-debuginfo = "unpacked" # faster linking
+strip = "none"
+debug-assertions = true
+overflow-checks = true
+lto = false # Different values slows compilation time (and linking) too much
+panic = "unwind"
+incremental = true
+codegen-units = 256
 
 [profile.dev.package."*"]
 inherits = "dev"
@@ -65,13 +82,14 @@ inherits = "dev"
 [profile.release]
 opt-level = 3
 debug = false
+#split-debuginfo = "" # Useless to set, debug is false
 strip = true
 debug-assertions = false
 overflow-checks = false
 lto = true
 panic = "abort"
 incremental = false
-codegen-units = 1
+codegen-units = 16
 
 [profile.release.package."*"]
 inherits = "release"

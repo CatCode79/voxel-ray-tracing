@@ -455,29 +455,24 @@ impl Window {
 
     //- Monitor --------------------------------------------------------------
 
-    #[inline(always)]
     pub fn current_monitor(&self) -> &Monitor {
         &self.monitor
     }
 
     //- Window Size Related Methods ------------------------------------------
 
-    #[inline(always)]
     pub fn inner_size(&self) -> WindowSize {
         self.inner_size
     }
 
-    #[inline(always)]
     pub fn inner_width(&self) -> u16 {
         self.inner_size.width
     }
 
-    #[inline(always)]
     pub fn inner_height(&self) -> u16 {
         self.inner_size.height
     }
 
-    #[inline(always)]
     pub fn is_minimized(&self) -> bool {
         self.minimized
     }

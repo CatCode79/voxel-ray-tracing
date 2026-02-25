@@ -27,7 +27,7 @@ pub enum KeyCode {
     /// Used for both the US <kbd>\\</kbd> (on the 101-key layout) and also for the key
     /// located between the <kbd>"</kbd> and <kbd>Enter</kbd> keys on row C of the 102-,
     /// 104- and 106-key layouts.
-    /// Labeled <kbd>#</kbd> on a UK (102) keyboard.
+    /// Labelled <kbd>#</kbd> on a UK (102) keyboard.
     Backslash,
     /// <kbd>[</kbd> on a US keyboard.
     BracketLeft,
@@ -58,17 +58,17 @@ pub enum KeyCode {
     /// <kbd>=</kbd> on a US keyboard.
     Equal,
     /// Located between the left <kbd>Shift</kbd> and <kbd>Z</kbd> keys.
-    /// Labeled <kbd>\\</kbd> on a UK keyboard.
+    /// Labelled <kbd>\\</kbd> on a UK keyboard.
     IntlBackslash,
     /// Located between the <kbd>/</kbd> and right <kbd>Shift</kbd> keys.
-    /// Labeled <kbd>\\</kbd> (ro) on a Japanese keyboard.
+    /// Labelled <kbd>\\</kbd> (ro) on a Japanese keyboard.
     IntlRo,
     /// Located between the <kbd>=</kbd> and <kbd>Backspace</kbd> keys.
-    /// Labeled <kbd>¥</kbd> (yen) on a Japanese keyboard. <kbd>\\</kbd> on a
+    /// Labelled <kbd>¥</kbd> (yen) on a Japanese keyboard. <kbd>\\</kbd> on a
     /// Russian keyboard.
     IntlYen,
     /// <kbd>a</kbd> on a US keyboard.
-    /// Labeled <kbd>q</kbd> on an AZERTY (e.g., French) keyboard.
+    /// Labelled <kbd>q</kbd> on an AZERTY (e.g., French) keyboard.
     KeyA,
     /// <kbd>b</kbd> on a US keyboard.
     KeyB,
@@ -101,7 +101,7 @@ pub enum KeyCode {
     /// <kbd>p</kbd> on a US keyboard.
     KeyP,
     /// <kbd>q</kbd> on a US keyboard.
-    /// Labeled <kbd>a</kbd> on an AZERTY (e.g., French) keyboard.
+    /// Labelled <kbd>a</kbd> on an AZERTY (e.g., French) keyboard.
     KeyQ,
     /// <kbd>r</kbd> on a US keyboard.
     KeyR,
@@ -138,7 +138,7 @@ pub enum KeyCode {
     /// <kbd>Alt</kbd>, <kbd>Option</kbd>, or <kbd>⌥</kbd>.
     AltLeft,
     /// <kbd>Alt</kbd>, <kbd>Option</kbd>, or <kbd>⌥</kbd>.
-    /// This is labeled <kbd>AltGr</kbd> on many keyboard layouts.
+    /// This is labelled <kbd>AltGr</kbd> on many keyboard layouts.
     AltRight,
     /// <kbd>Backspace</kbd> or <kbd>⌫</kbd>.
     /// Labeled <kbd>Delete</kbd> on Apple keyboards.

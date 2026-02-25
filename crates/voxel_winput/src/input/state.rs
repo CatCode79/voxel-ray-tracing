@@ -33,34 +33,28 @@ impl InputState {
 
     //- Flags Related Methods ------------------------------------------------
 
-    #[inline(always)]
     pub fn has_flag(&self, flag: InputFlags) -> bool {
         self.flags.contains(flag)
     }
 
-    #[inline(always)]
     pub fn set_flag(&mut self, flag: InputFlags) {
         self.flags.set(flag, true);
     }
 
-    #[inline(always)]
     pub fn clear_flag(&mut self, flag: InputFlags) {
         self.flags.set(flag, false);
     }
 
-    #[inline(always)]
     pub fn toggle_flag(&mut self, flag: InputFlags) {
         self.flags.toggle(flag);
     }
 
     //- Pressure Time Related methods ----------------------------------------
 
-    #[inline(always)]
     pub fn pressure_time(&self) -> u8 {
         self.pressure_time
     }
 
-    #[inline(always)]
     pub fn increment_pressure_time(&mut self) {
         self.pressure_time = self.pressure_time.saturating_add(1);
     }

@@ -17,7 +17,6 @@ pub struct Aabb {
 impl Aabb {
     pub const UNIT: Self = Self::new(Vec3::ZERO, Vec3::ONE);
 
-    #[inline(always)]
     pub const fn new(from: Vec3, to: Vec3) -> Self {
         Self { from, to }
     }

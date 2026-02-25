@@ -21,7 +21,6 @@ impl Color {
     pub const MIN_TRANSPARENT: u8 = Color::MAX_OPAQUE;
     pub const MAX_TRANSPARENT: u8 = Color::MIN_OPAQUE;
 
-    #[inline]
     pub const fn new(r: f32, g: f32, b: f32, a: f32) -> Self {
         Self(Vec4::new(r, g, b, a))
     }
@@ -35,32 +34,26 @@ impl Color {
         ))
     }
 
-    #[inline]
     pub const fn from_rgba(d: [f32; 4]) -> Self {
         Self::new(d[0], d[1], d[2], d[3])
     }
 
-    #[inline]
     pub const fn from_rgb_alpha(d: [f32; 3], alpha: f32) -> Self {
         Self::new(d[0], d[1], d[2], alpha)
     }
 
-    #[inline]
     pub fn r(&self) -> f32 {
         self.0.x
     }
 
-    #[inline]
     pub fn g(&self) -> f32 {
         self.0.y
     }
 
-    #[inline]
     pub fn b(&self) -> f32 {
         self.0.z
     }
 
-    #[inline]
     pub fn a(&self) -> f32 {
         self.0.w
     }
