@@ -119,7 +119,7 @@ impl GameState {
             self.world_gen.populate(
                 world.min(),
                 world.max() - IVec3::X * world.size as i32 / 2,
-                &mut world,
+                world,
             );
         }
         if (self.player.position.x as i32) > world.max().x - edge_dist {
@@ -138,7 +138,7 @@ impl GameState {
             self.world_gen.populate(
                 world.min() + IVec3::X * world.size as i32 / 2,
                 world.max(),
-                &mut world,
+                world,
             );
         }
         if (self.player.position.z as i32) < world.min().z + edge_dist {
@@ -157,7 +157,7 @@ impl GameState {
             self.world_gen.populate(
                 world.min(),
                 world.max() - IVec3::Z * world.size as i32 / 2,
-                &mut world,
+                world,
             );
         }
         if (self.player.position.z as i32) > world.max().z - edge_dist {
@@ -176,7 +176,7 @@ impl GameState {
             self.world_gen.populate(
                 world.min() + IVec3::Z * world.size as i32 / 2,
                 world.max(),
-                &mut world,
+                world,
             );
         }
         if world_moved {
@@ -186,7 +186,7 @@ impl GameState {
 
         let prev_pos = self.player.position;
         let prev_rot = self.player.rotation;
-        self.player.update(window, &world);
+        self.player.update(window, world);
         if window.get_input_state(InputKind::InventoryPrev).is_some() {
             self.inv_sel = (self.inv_sel as i8 - 1).clamp(0, INVENTORY.len() as i8 - 1) as u8;
         } else if window.get_input_state(InputKind::InventoryNext).is_some() {
@@ -201,7 +201,7 @@ impl GameState {
         let camera = self.player.create_camera(surface_size);
         renderer.write_camera(&camera);
 
-        let hit_result = self.player.cast_ray(&world);
+        let hit_result = self.player.cast_ray(world);
 
         enum Action {
             Place,

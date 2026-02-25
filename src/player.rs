@@ -66,8 +66,8 @@ impl Player {
         let dz = self.rotation.y.to_radians().cos() * self.speed * frame_modifier;
 
         if let Some(rotation) = window.handle_cursor_movement() {
-            self.rotation.x = self.rotation.x + rotation.x * frame_modifier;
-            self.rotation.y = self.rotation.y - rotation.y * frame_modifier;
+            self.rotation.x += rotation.x * frame_modifier;
+            self.rotation.y -= rotation.y * frame_modifier;
         }
 
         if self.flying {

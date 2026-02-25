@@ -98,7 +98,7 @@ impl World {
 impl World {
     pub fn check_bounds(&self, pos: IVec3) -> Result<(), WorldErr> {
         let in_bounds = (pos.cmpge(self.min())).all() && (pos.cmplt(self.max())).all();
-        in_bounds.then(|| ()).ok_or(WorldErr::OutOfBounds)
+        in_bounds.then_some(()).ok_or(WorldErr::OutOfBounds)
     }
 
     fn find_node(&self, pos: IVec3, max_depth: u32) -> Result<FoundNode, WorldErr> {
@@ -126,7 +126,7 @@ impl World {
                 (pos.y >= center.y) as i32,
                 (pos.z >= center.z) as i32,
             );
-            let child_idx = (gt.x as u32) << 0 | (gt.y as u32) << 1 | (gt.z as u32) << 2;
+            let child_idx = ((gt.x as u32)) | (gt.y as u32) << 1 | (gt.z as u32) << 2;
             node_idx = node.get_child(child_idx);
             let child_dir = gt * 2 - IVec3::ONE;
             center += IVec3::splat(size as i32 / 2) * child_dir;
@@ -139,9 +139,7 @@ impl World {
     }
 
     pub fn swap_nodes(&mut self, a: u32, b: u32) {
-        let b_node = self.nodes[b as usize];
-        self.nodes[b as usize] = self.nodes[a as usize];
-        self.nodes[a as usize] = b_node;
+        self.nodes.swap(b as usize, a as usize);
     }
 
     pub fn mut_node(&mut self, idx: u32) -> &mut Node {
@@ -240,7 +238,7 @@ impl World {
                 (pos.y >= center.y) as i32,
                 (pos.z >= center.z) as i32,
             );
-            let child_idx = (gt.x as u32) << 0 | (gt.y as u32) << 1 | (gt.z as u32) << 2;
+            let child_idx = ((gt.x as u32)) | (gt.y as u32) << 1 | (gt.z as u32) << 2;
             idx = first_child + child_idx;
             let child_dir = gt * 2 - IVec3::ONE;
             center += IVec3::splat(size as i32 / 2) * child_dir;
