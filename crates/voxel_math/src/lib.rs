@@ -2,7 +2,7 @@ pub mod aabb;
 pub mod color;
 pub mod dda;
 
-use glam::{ivec3, IVec3};
+use glam::{IVec3, ivec3};
 
 /// # Examples
 /// ```rust

@@ -4,15 +4,15 @@ use crate::gpu::{
     create_instance, create_surface, create_surface_config, request_adapter, request_device,
 };
 use crate::passes::{DenoiserPass, PathTracerPass, RayTracerPass, ScreenPass};
-use crate::texture::{TextureHandler, RESULT_TEX_FORMAT, RESULT_TEX_USAGES};
-use crate::{
-    Buffers, Camera, FrameData, Material, Node, Settings,
-    WorldData,
-};
+use crate::texture::{RESULT_TEX_FORMAT, RESULT_TEX_USAGES, TextureHandler};
+use crate::{Buffers, Camera, FrameData, Material, Node, Settings, WorldData};
 
 use glam::U16Vec2;
 use raw_window_handle as rwh;
-use wgpu::{CommandBuffer, CommandEncoder, CommandEncoderDescriptor, Device, Limits, Queue, Surface, SurfaceConfiguration, SurfaceError, SurfaceTexture, TextureView, TextureViewDescriptor};
+use wgpu::{
+    CommandBuffer, CommandEncoder, CommandEncoderDescriptor, Device, Limits, Queue, Surface,
+    SurfaceConfiguration, SurfaceError, SurfaceTexture, TextureView, TextureViewDescriptor,
+};
 
 use core::num::NonZeroU16;
 use std::iter;
@@ -90,8 +90,7 @@ impl Renderer {
             RESULT_TEX_USAGES,
         );
 
-        let ray_tracer =
-            RayTracerPass::new(&device, &normal_texture, &buffers);
+        let ray_tracer = RayTracerPass::new(&device, &normal_texture, &buffers);
         let path_tracer =
             PathTracerPass::new(&device, &result_texture, &prev_result_texture, &buffers);
         let denoiser_shader = DenoiserPass::new(&device, &result_texture, &denoised_texture);

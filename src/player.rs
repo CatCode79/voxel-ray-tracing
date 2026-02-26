@@ -4,12 +4,12 @@ use crate::world::World;
 
 use voxel_math::{
     aabb::Aabb,
-    dda::{axis_rot_to_ray, cast_ray, HitResult},
+    dda::{HitResult, axis_rot_to_ray, cast_ray},
 };
 use voxel_render::{Camera, Voxel};
 use voxel_winput::{mapping::InputKind, window::Window};
 
-use glam::{vec3, BVec3, Mat4, U16Vec2, Vec3};
+use glam::{BVec3, Mat4, U16Vec2, Vec3, vec3};
 
 //= GRAVITY FALLS =================================================================================
 

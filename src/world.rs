@@ -1,11 +1,11 @@
 //= IMPORTS ==================================================================
 
-use crate::open_simplex::{init_gradients, NoiseMap};
+use crate::open_simplex::{NoiseMap, init_gradients};
 
 use voxel_math::aabb::Aabb;
 use voxel_render::{Node, Voxel};
 
-use glam::{ivec3, vec2, vec3, IVec3, Vec3};
+use glam::{IVec3, Vec3, ivec3, vec2, vec3};
 
 use std::ops::Range;
 

@@ -86,21 +86,24 @@ impl Voxel {
     pub const MIRROR: Self = Self(21);
     pub const BRIGHT: Self = Self(22);
 
-    #[must_use] 
+    #[must_use]
     pub fn display_name(&self) -> &'static str {
         VOXEL_NAMES[self.0 as usize]
     }
 
-    #[must_use] 
+    #[must_use]
     pub fn is_empty(self) -> bool {
         self == Self::AIR || self == Self::WATER
     }
-    #[must_use] 
+    #[must_use]
     pub const fn is_solid(self) -> bool {
-        !matches!(self, Self::AIR | Self::WATER | Self::MAGMA | Self::FIRE | Self::MUD)
+        !matches!(
+            self,
+            Self::AIR | Self::WATER | Self::MAGMA | Self::FIRE | Self::MUD
+        )
     }
 
-    #[must_use] 
+    #[must_use]
     pub const fn viscosity(self) -> f32 {
         match self {
             Self::WATER => 0.6,
@@ -138,14 +141,14 @@ impl Material {
         polish_scatter: 0.0,
     };
 
-    #[must_use] 
+    #[must_use]
     pub const fn new_empty() -> Self {
         let mut rs = Self::ZERO;
         rs.empty = 1;
         rs
     }
 
-    #[must_use] 
+    #[must_use]
     pub const fn new_solid(color: [f32; 3], scatter: f32) -> Self {
         let mut rs = Self::ZERO;
         rs.color = color;
@@ -153,7 +156,7 @@ impl Material {
         rs
     }
 
-    #[must_use] 
+    #[must_use]
     pub const fn polished(mut self, chance: f32, scatter: f32, color: [f32; 3]) -> Self {
         self.polish_bounce_chance = chance;
         self.polish_color = color;
@@ -161,7 +164,7 @@ impl Material {
         self
     }
 
-    #[must_use] 
+    #[must_use]
     pub const fn emit(mut self, emission: f32) -> Self {
         self.emission = emission;
         self

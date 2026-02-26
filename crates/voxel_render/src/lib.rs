@@ -4,10 +4,10 @@ extern crate core;
 
 mod buffers;
 mod gpu;
+mod passes;
 mod renderer;
 mod shader;
 mod texture;
-mod passes;
 
 //= RE-EXPORTS ===============================================================
 

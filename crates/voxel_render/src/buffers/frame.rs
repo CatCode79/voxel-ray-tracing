@@ -2,7 +2,7 @@
 
 #[derive(Debug, Default)]
 pub struct FrameData {
-    counter: u32,   // Used to randomise on shaders
+    counter: u32,     // Used to randomise on shaders
     accumulator: u32, // Used to reset the info accumulation on shaders
 }
 

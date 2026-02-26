@@ -466,7 +466,7 @@ pub enum KeyCode {
 //= SCAN CODE CONVERSION (took from winit 0.29.15) ===========================
 
 #[allow(clippy::too_many_lines)]
-#[must_use] 
+#[must_use]
 pub fn _to_scancode(keycode: KeyCode) -> Option<u16> {
     // See `from_scancode` for more info
 

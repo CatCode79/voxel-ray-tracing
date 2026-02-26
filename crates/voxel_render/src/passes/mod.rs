@@ -1,15 +1,15 @@
 //= MODS ===========================================================================================
 
-mod ray_tracer;
-mod path_tracer;
 mod denoiser;
+mod path_tracer;
+mod ray_tracer;
 mod screen;
 
 //= RE-EXPORTS =====================================================================================
 
-pub(crate) use ray_tracer::*;
-pub(crate) use path_tracer::*;
 pub(crate) use denoiser::*;
+pub(crate) use path_tracer::*;
+pub(crate) use ray_tracer::*;
 pub(crate) use screen::*;
 
 //= IMPORTS ========================================================================================
@@ -26,19 +26,19 @@ static SCREEN_SHADER_SRC: &str = include_str!("../shaders/screen.wgsl");
 //= BINDING TYPES ============================================================
 
 const fn uniform_binding_type() -> BindingType {
-	BindingType::Buffer {
-		ty: BufferBindingType::Uniform,
-		has_dynamic_offset: false,
-		min_binding_size: None,
-	}
+    BindingType::Buffer {
+        ty: BufferBindingType::Uniform,
+        has_dynamic_offset: false,
+        min_binding_size: None,
+    }
 }
 
 const fn storage_binding_type(read_only: bool) -> BindingType {
-	BindingType::Buffer {
-		ty: BufferBindingType::Storage { read_only },
-		has_dynamic_offset: false,
-		min_binding_size: None,
-	}
+    BindingType::Buffer {
+        ty: BufferBindingType::Storage { read_only },
+        has_dynamic_offset: false,
+        min_binding_size: None,
+    }
 }
 
 //= MACROS ===================================================================

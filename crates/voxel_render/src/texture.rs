@@ -1,7 +1,11 @@
 //= IMPORTS ==================================================================
 
 use glam::U16Vec2;
-use wgpu::{AddressMode, Device, Extent3d, FilterMode, MipmapFilterMode, Sampler, SamplerDescriptor, TextureDescriptor, TextureDimension, TextureFormat, TextureUsages, TextureView, TextureViewDescriptor};
+use wgpu::{
+    AddressMode, Device, Extent3d, FilterMode, MipmapFilterMode, Sampler, SamplerDescriptor,
+    TextureDescriptor, TextureDimension, TextureFormat, TextureUsages, TextureView,
+    TextureViewDescriptor,
+};
 
 //= CONSTANTS ================================================================
 

@@ -3,14 +3,14 @@
 use crate::window::DEFAULT_FRAMERATE;
 
 use windows_sys::{
-    core::PCWSTR,
     Win32::{
         Foundation::HWND,
         Graphics::Gdi::{
-            EnumDisplaySettingsExW, GetMonitorInfoW, MonitorFromWindow, DEVMODEW,
-            ENUM_CURRENT_SETTINGS, HMONITOR, MONITORINFO, MONITORINFOEXW, MONITOR_DEFAULTTONEAREST,
+            DEVMODEW, ENUM_CURRENT_SETTINGS, EnumDisplaySettingsExW, GetMonitorInfoW, HMONITOR,
+            MONITOR_DEFAULTTONEAREST, MONITORINFO, MONITORINFOEXW, MonitorFromWindow,
         },
     },
+    core::PCWSTR,
 };
 
 use std::{io, mem, time};
@@ -29,7 +29,8 @@ impl Monitor {
     pub fn new(hwnd: HWND) -> Self {
         let handle = get_current_monitor(hwnd);
         let device_name = get_device_name(handle);
-        let refresh_rate = device_name.and_then(|_| get_refresh_rate(device_name.unwrap().as_ptr()));
+        let refresh_rate =
+            device_name.and_then(|_| get_refresh_rate(device_name.unwrap().as_ptr()));
         let device_name = device_name.and_then(|_| String::from_utf16(&device_name.unwrap()).ok());
         Self {
             _handle: handle,
@@ -75,12 +76,7 @@ fn get_current_monitor(hwnd: HWND) -> HMONITOR {
 fn get_monitor_info(handle: HMONITOR) -> Option<MONITORINFOEXW> {
     let mut monitor_info: MONITORINFOEXW = unsafe { mem::zeroed() };
     monitor_info.monitorInfo.cbSize = size_of::<MONITORINFOEXW>() as u32;
-    let status = unsafe {
-        GetMonitorInfoW(
-            handle,
-            (&raw mut monitor_info).cast::<MONITORINFO>(),
-        )
-    };
+    let status = unsafe { GetMonitorInfoW(handle, (&raw mut monitor_info).cast::<MONITORINFO>()) };
     if status == false.into() {
         log::error!("{}", io::Error::last_os_error());
         None
@@ -98,7 +94,9 @@ fn get_refresh_rate(device_name: PCWSTR) -> Option<f64> {
     unsafe {
         let mut mode: DEVMODEW = mem::zeroed();
         mode.dmSize = size_of_val(&mode) as u16;
-        if EnumDisplaySettingsExW(device_name, ENUM_CURRENT_SETTINGS, &raw mut mode, 0) == true.into() {
+        if EnumDisplaySettingsExW(device_name, ENUM_CURRENT_SETTINGS, &raw mut mode, 0)
+            == true.into()
+        {
             Some(f64::from(mode.dmDisplayFrequency)) // as millihertz
         } else {
             None

@@ -9,8 +9,8 @@ use windows_sys::Win32::{
     },
     Foundation::{HWND, LPARAM},
     UI::Input::{
-        GetRawInputData, RegisterRawInputDevices, RAWINPUT, RAWINPUTDEVICE, RAWINPUTHEADER,
-        RIDEV_DEVNOTIFY, RID_INPUT, RIM_TYPEMOUSE,
+        GetRawInputData, RAWINPUT, RAWINPUTDEVICE, RAWINPUTHEADER, RID_INPUT, RIDEV_DEVNOTIFY,
+        RIM_TYPEMOUSE, RegisterRawInputDevices,
     },
 };
 

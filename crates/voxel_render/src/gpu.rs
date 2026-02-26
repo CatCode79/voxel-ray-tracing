@@ -3,14 +3,16 @@
 use crate::supported_backends;
 
 use pollster::FutureExt;
-use wgpu::{rwh, Adapter, CompositeAlphaMode, Device, DeviceDescriptor, ExperimentalFeatures, Features, Instance, InstanceDescriptor, InstanceFlags, Limits, MemoryHints, PowerPreference, PresentMode, Queue, RequestAdapterOptions, Surface, SurfaceConfiguration, SurfaceTargetUnsafe, TextureUsages, Trace};
+use wgpu::{
+    Adapter, CompositeAlphaMode, Device, DeviceDescriptor, ExperimentalFeatures, Features,
+    Instance, InstanceDescriptor, InstanceFlags, Limits, MemoryHints, PowerPreference, PresentMode,
+    Queue, RequestAdapterOptions, Surface, SurfaceConfiguration, SurfaceTargetUnsafe,
+    TextureUsages, Trace, rwh,
+};
 
 //= ADAPTER ==================================================================
 
-pub fn request_adapter(
-    instance: &Instance,
-    surface: &Surface<'static>,
-) -> Result<Adapter, String> {
+pub fn request_adapter(instance: &Instance, surface: &Surface<'static>) -> Result<Adapter, String> {
     log_possible_adapters(supported_backends(), instance);
 
     let result = async {
@@ -56,26 +58,21 @@ fn get_adapter_info(adapter: &Adapter) -> String {
 
 //= DEVICE AND QUEUE =========================================================
 
-pub fn request_device(
-    adapter: &Adapter,
-    max_buffer_sizes: u32,
-) -> Result<(Device, Queue), String> {
+pub fn request_device(adapter: &Adapter, max_buffer_sizes: u32) -> Result<(Device, Queue), String> {
     let dq = async {
         adapter
-            .request_device(
-                &DeviceDescriptor {
-                    required_features: Features::default(),
-                    required_limits: Limits {
-                        max_storage_buffer_binding_size: max_buffer_sizes,
-                        max_buffer_size: u64::from(max_buffer_sizes),
-                        ..Default::default()
-                    },
-                    label: None,
-                    memory_hints: MemoryHints::Performance,
-                    trace: Trace::default(),
-                    experimental_features: ExperimentalFeatures::default(),
+            .request_device(&DeviceDescriptor {
+                required_features: Features::default(),
+                required_limits: Limits {
+                    max_storage_buffer_binding_size: max_buffer_sizes,
+                    max_buffer_size: u64::from(max_buffer_sizes),
+                    ..Default::default()
                 },
-            )
+                label: None,
+                memory_hints: MemoryHints::Performance,
+                trace: Trace::default(),
+                experimental_features: ExperimentalFeatures::default(),
+            })
             .await
     }
     .block_on();

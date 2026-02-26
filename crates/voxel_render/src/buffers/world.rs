@@ -10,7 +10,7 @@ pub struct WorldData {
 }
 
 impl WorldData {
-    #[must_use] 
+    #[must_use]
     pub const fn new(min: IVec3, size: u32) -> Self {
         Self {
             min: [min.x as f32, min.y as f32, min.z as f32],

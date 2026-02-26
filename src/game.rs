@@ -4,7 +4,7 @@ use crate::player::Player;
 use crate::world::{NodeSeq, World, WorldGen};
 
 use voxel_math::dda::HitResult;
-use voxel_render::{Material, Renderer, Settings, Voxel, WorldData, VOXEL_MATERIALS};
+use voxel_render::{Material, Renderer, Settings, VOXEL_MATERIALS, Voxel, WorldData};
 use voxel_winput::{mapping::InputKind, window::Window};
 
 use glam::{IVec3, Vec3};
@@ -63,7 +63,8 @@ impl GameState {
             0.0f32.to_radians().sin() * 500.0,
             0.0f32.to_radians().cos() * 500.0,
             world.size as f32 * 0.5,
-        ).to_array();
+        )
+        .to_array();
         let settings = Settings {
             max_ray_bounces: 4,
             samples_per_pixel: 1,

@@ -15,7 +15,7 @@ pub struct InputState {
 }
 
 impl InputState {
-    #[must_use] 
+    #[must_use]
     pub const fn new(x: Option<i16>, y: Option<i16>) -> Self {
         Self {
             x_coord: x,
@@ -34,7 +34,7 @@ impl InputState {
 
     //- Flags Related Methods ------------------------------------------------
 
-    #[must_use] 
+    #[must_use]
     pub const fn has_flag(&self, flag: InputFlags) -> bool {
         self.flags.contains(flag)
     }
@@ -53,7 +53,7 @@ impl InputState {
 
     //- Pressure Time Related methods ----------------------------------------
 
-    #[must_use] 
+    #[must_use]
     pub const fn pressure_time(&self) -> u8 {
         self.pressure_time
     }

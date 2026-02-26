@@ -1,23 +1,23 @@
 //= IMPORTS ==================================================================
 
 use crate::input::{
-    from_scancode, process_wm_input, register_keyboard_and_mouse, InputFlags, InputSource,
-    InputState, MouseButton,
+    InputFlags, InputSource, InputState, MouseButton, from_scancode, process_wm_input,
+    register_keyboard_and_mouse,
 };
 use crate::mapping::{InputKind, InputMapping};
-use crate::window::{Event, Monitor, WindowSize, DEFAULT_FRAMERATE};
+use crate::window::{DEFAULT_FRAMERATE, Event, Monitor, WindowSize};
 use crate::{signed_hiword, signed_loword, unsigned_hiword, unsigned_loword};
 
 use glam::{U16Vec2, Vec2};
 use hashbrown::HashMap;
 use raw_window_handle as rwh;
 use windows_sys::{
-    core::{self, PCWSTR},
     Win32::{
         Foundation::{HWND, LPARAM, LRESULT, WPARAM},
         System::LibraryLoader::GetModuleHandleW,
         UI::WindowsAndMessaging::*,
     },
+    core::{self, PCWSTR},
 };
 
 use std::num::{NonZeroIsize, NonZeroU16};
@@ -245,13 +245,14 @@ impl Window {
                     let source = InputSource::Mouse {
                         source: MouseButton::Left,
                     };
-                    let mut state = self.inputs
-                        .remove(&source)
-                        .map_or_else(InputState::default, |mut s| {
-                            // Already pressed
-                            s.increment_pressure_time();
-                            s
-                        });
+                    let mut state =
+                        self.inputs
+                            .remove(&source)
+                            .map_or_else(InputState::default, |mut s| {
+                                // Already pressed
+                                s.increment_pressure_time();
+                                s
+                            });
                     log::trace!("-> MouseLeftDown ({x_pos}, {y_pos})");
                     state.set_coords(x_pos, y_pos);
                     self.inputs.insert(source, state);
@@ -415,13 +416,11 @@ impl Window {
     //- Mouse Related Events -------------------------------------------------
 
     pub fn hide_cursor(&self) {
-        while unsafe { ShowCursor(false.into()) } >= 0 {
-        }
+        while unsafe { ShowCursor(false.into()) } >= 0 {}
     }
 
     pub fn show_cursor(&self) {
-        while unsafe { ShowCursor(true.into()) } < 0 {
-        }
+        while unsafe { ShowCursor(true.into()) } < 0 {}
     }
 
     // Mouse (or other device) camera rotation
