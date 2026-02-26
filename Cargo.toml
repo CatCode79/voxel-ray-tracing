@@ -41,6 +41,16 @@ style = { level = "warn", priority = -1 }
 suspicious = { level = "warn", priority = -1 }
 
 doc_markdown = "allow"
+cast_possible_truncation = "allow"
+cast_precision_loss = "allow"
+cast_sign_loss = "allow"
+missing_errors_doc = "allow"
+module_inception = "allow"
+multiple_crate_versions = "allow"
+new_without_default = "allow"
+pub_underscore_fields = "allow"
+redundant_pub_crate = "allow"
+wildcard_imports = "allow"
 
 [package]
 name = "voxel-path-tracer"

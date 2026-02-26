@@ -19,7 +19,7 @@ pub use renderer::*;
 /// The backends are in order of support, the greater the first.
 fn supported_backends() -> wgpu::Backends {
     #[cfg(target_os = "windows")]
-    return wgpu::Backends::DX12 | wgpu::Backends::VULKAN;
+    return wgpu::Backends::VULKAN /*| wgpu::Backends::DX12*/;
 
     #[cfg(target_os = "linux")]
     return wgpu::Backends::VULKAN;

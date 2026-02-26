@@ -126,7 +126,7 @@ impl World {
                 (pos.y >= center.y) as i32,
                 (pos.z >= center.z) as i32,
             );
-            let child_idx = ((gt.x as u32)) | (gt.y as u32) << 1 | (gt.z as u32) << 2;
+            let child_idx = (gt.x as u32) | (gt.y as u32) << 1 | (gt.z as u32) << 2;
             node_idx = node.get_child(child_idx);
             let child_dir = gt * 2 - IVec3::ONE;
             center += IVec3::splat(size as i32 / 2) * child_dir;
@@ -238,7 +238,7 @@ impl World {
                 (pos.y >= center.y) as i32,
                 (pos.z >= center.z) as i32,
             );
-            let child_idx = ((gt.x as u32)) | (gt.y as u32) << 1 | (gt.z as u32) << 2;
+            let child_idx = (gt.x as u32) | (gt.y as u32) << 1 | (gt.z as u32) << 2;
             idx = first_child + child_idx;
             let child_dir = gt * 2 - IVec3::ONE;
             center += IVec3::splat(size as i32 / 2) * child_dir;

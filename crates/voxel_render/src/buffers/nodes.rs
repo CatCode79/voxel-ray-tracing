@@ -47,13 +47,15 @@ pub struct Node(BitField);
 impl Node {
     pub const ZERO: Self = Self(BitField::ZERO);
 
-    pub fn new_leaf(voxel: Voxel) -> Self {
+    #[must_use]
+    pub const fn new_leaf(voxel: Voxel) -> Self {
         let mut rs = Self::ZERO;
         rs.set_voxel(voxel);
         rs.set_used_flag(true);
         rs
     }
 
+    #[must_use]
     pub fn new_split(first_child: u32) -> Self {
         let mut rs = Self::ZERO;
         rs.set_first_child(first_child);
@@ -62,38 +64,43 @@ impl Node {
         rs
     }
 
-    pub fn set_used_flag(&mut self, f: bool) {
-        self.0.set(f as u32, 1, 30)
+    pub const fn set_used_flag(&mut self, f: bool) {
+        self.0.set(f as u32, 1, 30);
     }
-    pub fn is_used(self) -> bool {
+    #[must_use]
+    pub const fn is_used(self) -> bool {
         self.0.get(1, 30) == 1
     }
 
-    pub fn set_split_flag(&mut self, f: bool) {
-        self.0.set(f as u32, 1, 31)
+    pub const fn set_split_flag(&mut self, f: bool) {
+        self.0.set(f as u32, 1, 31);
     }
-    pub fn is_split(self) -> bool {
+    #[must_use]
+    pub const fn is_split(self) -> bool {
         self.0.get(1, 31) == 1
     }
 
-    pub fn get_voxel(self) -> Voxel {
+    #[must_use]
+    pub const fn get_voxel(self) -> Voxel {
         Voxel(self.0.get(8, 0) as u8)
     }
-    pub fn set_voxel(&mut self, voxel: Voxel) {
-        self.0.set(voxel.0 as u32, 8, 0)
+    pub const fn set_voxel(&mut self, voxel: Voxel) {
+        self.0.set(voxel.0 as u32, 8, 0);
     }
 
     pub fn set_first_child(&mut self, first_child: u32) {
-        debug_assert!(first_child == 0 || ((first_child - 1) % 8) == 0);
+        debug_assert!(first_child == 0 || (first_child - 1).is_multiple_of(8));
         let first_child = (first_child - 1) / 8;
 
-        self.0.set(first_child, 30, 0)
+        self.0.set(first_child, 30, 0);
     }
-    pub fn first_child(self) -> u32 {
+    #[must_use]
+    pub const fn first_child(self) -> u32 {
         self.0.get(30, 0) * 8 + 1
     }
 
-    pub fn get_child(self, idx: u32) -> u32 {
+    #[must_use]
+    pub const fn get_child(self, idx: u32) -> u32 {
         self.first_child() + idx
     }
 
@@ -103,7 +110,7 @@ impl Node {
     }
 
     /// Call if `Self::can_simplify` returns `true`.
-    pub fn simplify(&mut self, result: Voxel) {
+    pub const fn simplify(&mut self, result: Voxel) {
         self.set_split_flag(false);
         self.set_voxel(result);
     }
@@ -117,10 +124,11 @@ pub struct NodesBuffer {
 }
 
 impl NodesBuffer {
+    #[must_use]
     pub fn new(device: &Device, label: &str, usage: BufferUsages, count: u32) -> Self {
         let buf = device.create_buffer(&BufferDescriptor {
             label: Some(label),
-            size: count as u64 * size_of::<Node>() as u64,
+            size: u64::from(count) * size_of::<Node>() as u64,
             usage,
             mapped_at_creation: false,
         });
@@ -128,11 +136,11 @@ impl NodesBuffer {
     }
 
     pub fn write(&self, queue: &Queue, offset: u64, nodes: &[Node]) {
-        let nodes_cut = (nodes.len() as u64).min(self.count as u64 - offset);
+        let nodes_cut = (nodes.len() as u64).min(u64::from(self.count) - offset);
         let nodes: &[Node] = &nodes[0..nodes_cut as usize];
 
-        let ptr = nodes.as_ptr() as *const u8;
-        let size = nodes.len() * size_of::<Node>();
+        let ptr = nodes.as_ptr().cast::<u8>();
+        let size = std::mem::size_of_val(nodes);
         #[allow(unsafe_code)]
         let slice = unsafe { slice::from_raw_parts(ptr, size) };
         let offset = offset * size_of::<Node>() as u64;

@@ -12,6 +12,7 @@ pub struct InputMapping {
 }
 
 impl InputMapping {
+    #[must_use] 
     pub fn new() -> Self {
         Self {
             primary: vec![None; InputKind::Max as usize],
@@ -21,10 +22,12 @@ impl InputMapping {
 
     //- Getters --------------------------------------------------------------
 
+    #[must_use] 
     pub fn get_primary(&self, kind: InputKind) -> Option<&InputSource> {
         self.primary[kind as usize].as_ref()
     }
 
+    #[must_use] 
     pub fn get_secondary(&self, kind: InputKind) -> Option<&InputSource> {
         self.secondary[kind as usize].as_ref()
     }

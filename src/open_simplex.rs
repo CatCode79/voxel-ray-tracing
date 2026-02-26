@@ -47,10 +47,7 @@ impl OpenSimplexNoise {
     pub(crate) fn new(mut seed: i64) -> Self {
         let mut perm = [0; PSIZE];
         let mut perm_grad2 = [Grad2::ZERO; PSIZE];
-        let mut source = [0; PSIZE];
-        for i in 0..PSIZE {
-            source[i] = i;
-        }
+        let mut source: [usize; PSIZE] = std::array::from_fn(|i| i);
         #[allow(unsafe_code)]
         for i in (0..PSIZE).rev() {
             seed = seed
@@ -315,9 +312,9 @@ pub(crate) fn init_gradients() {
             dy: 0.99144486137381,
         },
     ];
-    for i in 0..grad2.len() {
-        grad2[i].dx /= N2;
-        grad2[i].dy /= N2;
+    for grad in &mut grad2 {
+        grad.dx /= N2;
+        grad.dy /= N2;
     }
     for i in 0..PSIZE {
         #[allow(unsafe_code)]
@@ -568,10 +565,10 @@ pub(crate) fn init_gradients() {
             dz: 2.838945207362466,
         },
     ];
-    for i in 0..grad3.len() {
-        grad3[i].dx /= N3;
-        grad3[i].dy /= N3;
-        grad3[i].dz /= N3;
+    for grad in &mut grad3 {
+        grad.dx /= N3;
+        grad.dy /= N3;
+        grad.dz /= N3;
     }
     for i in 0..PSIZE {
         #[allow(unsafe_code)]

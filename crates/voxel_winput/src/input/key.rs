@@ -465,14 +465,15 @@ pub enum KeyCode {
 
 //= SCAN CODE CONVERSION (took from winit 0.29.15) ===========================
 
-#[allow(unused)]
-pub(crate) fn to_scancode(keycode: KeyCode) -> Option<u16> {
+#[allow(clippy::too_many_lines)]
+#[must_use] 
+pub fn _to_scancode(keycode: KeyCode) -> Option<u16> {
     // See `from_scancode` for more info
 
     let hkl = unsafe { GetKeyboardLayout(0) };
 
     let primary_lang_id = primarylangid(unsigned_loword(hkl as u32));
-    let is_korean = primary_lang_id as u32 == LANG_KOREAN;
+    let is_korean = u32::from(primary_lang_id) == LANG_KOREAN;
 
     match keycode {
         KeyCode::Backquote => Some(0x0029),
@@ -641,7 +642,9 @@ pub(crate) fn to_scancode(keycode: KeyCode) -> Option<u16> {
 // See: https://www.win.tue.nl/~aeb/linux/kbd/scancodes-1.html
 // and: https://www.w3.org/TR/uievents-code/
 // and: The widget/NativeKeyToDOMCodeName.h file in the firefox source
-pub(crate) fn from_scancode(scancode: u16) -> Option<KeyCode> {
+#[allow(clippy::too_many_lines)]
+#[must_use]
+pub const fn from_scancode(scancode: u16) -> Option<KeyCode> {
     match scancode {
         0x0029 => Some(KeyCode::Backquote),
         0x002B => Some(KeyCode::Backslash),
@@ -708,10 +711,10 @@ pub(crate) fn from_scancode(scancode: u16) -> Option<KeyCode> {
         0x0039 => Some(KeyCode::Space),
         0x000F => Some(KeyCode::Tab),
         0x0079 => Some(KeyCode::Convert),
-        0x0072 => Some(KeyCode::Lang1), // for non-Korean layout
-        0xE0F2 => Some(KeyCode::Lang1), // for Korean layout
-        0x0071 => Some(KeyCode::Lang2), // for non-Korean layout
-        0xE0F1 => Some(KeyCode::Lang2), // for Korean layout
+        0x0072 | 0xE0F2 => Some(KeyCode::Lang1), // for non-Korean layout
+        // for Korean layout
+        0x0071 | 0xE0F1 => Some(KeyCode::Lang2), // for non-Korean layout
+        // for Korean layout
         0x0070 => Some(KeyCode::KanaMode),
         0x007B => Some(KeyCode::NonConvert),
         0xE053 => Some(KeyCode::Delete),
@@ -768,11 +771,11 @@ pub(crate) fn from_scancode(scancode: u16) -> Option<KeyCode> {
         0x006D => Some(KeyCode::F22),
         0x006E => Some(KeyCode::F23),
         0x0076 => Some(KeyCode::F24),
-        0xE037 => Some(KeyCode::PrintScreen),
-        0x0054 => Some(KeyCode::PrintScreen), // Alt + PrintScreen
+        0xE037 | 0x0054 => Some(KeyCode::PrintScreen),
+        // Alt + PrintScreen
         0x0046 => Some(KeyCode::ScrollLock),
-        0x0045 => Some(KeyCode::Pause),
-        0xE046 => Some(KeyCode::Pause), // Ctrl + Pause
+        0x0045 | 0xE046 => Some(KeyCode::Pause),
+        // Ctrl + Pause
         0xE06A => Some(KeyCode::BrowserBack),
         0xE066 => Some(KeyCode::BrowserFavorites),
         0xE069 => Some(KeyCode::BrowserForward),

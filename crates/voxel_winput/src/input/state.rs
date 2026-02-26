@@ -15,7 +15,8 @@ pub struct InputState {
 }
 
 impl InputState {
-    pub fn new(x: Option<i16>, y: Option<i16>) -> Self {
+    #[must_use] 
+    pub const fn new(x: Option<i16>, y: Option<i16>) -> Self {
         Self {
             x_coord: x,
             y_coord: y,
@@ -26,14 +27,15 @@ impl InputState {
 
     //- Position Related Methods ---------------------------------------------
 
-    pub fn set_coords(&mut self, x: i16, y: i16) {
+    pub const fn set_coords(&mut self, x: i16, y: i16) {
         self.x_coord = Some(x);
         self.y_coord = Some(y);
     }
 
     //- Flags Related Methods ------------------------------------------------
 
-    pub fn has_flag(&self, flag: InputFlags) -> bool {
+    #[must_use] 
+    pub const fn has_flag(&self, flag: InputFlags) -> bool {
         self.flags.contains(flag)
     }
 
@@ -51,11 +53,12 @@ impl InputState {
 
     //- Pressure Time Related methods ----------------------------------------
 
-    pub fn pressure_time(&self) -> u8 {
+    #[must_use] 
+    pub const fn pressure_time(&self) -> u8 {
         self.pressure_time
     }
 
-    pub fn increment_pressure_time(&mut self) {
+    pub const fn increment_pressure_time(&mut self) {
         self.pressure_time = self.pressure_time.saturating_add(1);
     }
 }

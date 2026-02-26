@@ -118,7 +118,7 @@ use std::mem;
 }
 */
 
-pub(crate) fn register_keyboard_and_mouse(hwnd: HWND) -> bool {
+pub fn register_keyboard_and_mouse(hwnd: HWND) -> bool {
     // RIDEV_DEVNOTIFY: receive hotplug events
     let flags = RIDEV_DEVNOTIFY;
 
@@ -145,8 +145,9 @@ pub(crate) fn register_keyboard_and_mouse(hwnd: HWND) -> bool {
 
 // Remember that, using MOUSE_VIRTUAL_DESKTOP, instead of controlling relative movement
 // controls the absolute position in the possibly multi-monitor virtual screen.
-pub(crate) fn process_wm_input(lparam: LPARAM) -> Option<(f32, f32)> {
+pub fn process_wm_input(lparam: LPARAM) -> Option<(f32, f32)> {
     let mut data: RAWINPUT = unsafe { mem::zeroed() };
+    let data_raw_input: *mut RAWINPUT = &raw mut data;
     let mut data_size = size_of::<RAWINPUT>() as u32;
     let header_size = size_of::<RAWINPUTHEADER>() as u32;
 
@@ -154,8 +155,8 @@ pub(crate) fn process_wm_input(lparam: LPARAM) -> Option<(f32, f32)> {
         GetRawInputData(
             lparam,
             RID_INPUT,
-            &mut data as *mut _ as *mut ffi::c_void,
-            &mut data_size,
+            data_raw_input.cast::<ffi::c_void>(),
+            &raw mut data_size,
             header_size,
         )
     };
@@ -166,7 +167,7 @@ pub(crate) fn process_wm_input(lparam: LPARAM) -> Option<(f32, f32)> {
 
         if data.header.dwType == RIM_TYPEMOUSE {
             let mouse = unsafe { data.data.mouse };
-            if has_flag(mouse.usFlags as u32, MOUSE_MOVE_RELATIVE) {
+            if has_flag(u32::from(mouse.usFlags), MOUSE_MOVE_RELATIVE) {
                 return Some((mouse.lLastX as f32, mouse.lLastY as f32));
             }
         }

@@ -45,12 +45,13 @@ pub struct Window {
 }
 
 impl Window {
+    #[allow(clippy::missing_errors_doc)]
     pub fn new(
-        title: String,
+        title: &str,
         width: u16,
         height: u16,
         input_mapping: InputMapping,
-    ) -> Result<Window, String> {
+    ) -> Result<Self, String> {
         let instance = unsafe { GetModuleHandleW(0 as PCWSTR) };
         if instance == 0 {
             return Err(io::Error::last_os_error().to_string());
@@ -66,7 +67,7 @@ impl Window {
         let wc = WNDCLASSW {
             hCursor: cursor,
             hbrBackground: 0,
-            hInstance: instance.into(),
+            hInstance: instance,
             lpszClassName: window_class_name,
             style: CS_HREDRAW | CS_VREDRAW,
             lpfnWndProc: Some(wndproc),
@@ -76,14 +77,14 @@ impl Window {
             lpszMenuName: 0 as PCWSTR,
         };
 
-        if unsafe { RegisterClassW(&wc) } == 0 {
+        if unsafe { RegisterClassW(&raw const wc) } == 0 {
             return Err(io::Error::last_os_error().to_string());
         }
 
         let hwnd: HWND = 0;
         let monitor = Monitor::new(hwnd);
         let frame_budget = monitor.calculate_frame_budget();
-        let mut window = Window {
+        let mut window = Self {
             hwnd,
             monitor,
 
@@ -111,8 +112,8 @@ impl Window {
                 WS_OVERLAPPEDWINDOW | WS_VISIBLE,
                 CW_USEDEFAULT,
                 CW_USEDEFAULT,
-                width as i32,
-                height as i32,
+                i32::from(width),
+                i32::from(height),
                 0,
                 0,
                 instance,
@@ -121,7 +122,7 @@ impl Window {
         };
 
         let success = register_keyboard_and_mouse(handle);
-        if success == false {
+        if !success {
             log::error!(
                 "Error on register keyboard and mouse: {:?}",
                 io::Error::last_os_error().to_string()
@@ -140,7 +141,11 @@ impl Window {
         Ok(window)
     }
 
+    #[allow(clippy::too_many_lines, clippy::missing_panics_doc)]
     pub fn process_events(&mut self) -> Vec<Event> {
+        const FIRST_WM: u32 = WM_CREATE;
+        const LAST_WM: u32 = WM_DEVICECHANGE;
+
         // Remember: in case you want to emulate frames or physics, that MSG also contains the time.
         let mut msg = unsafe { mem::zeroed() };
 
@@ -157,9 +162,6 @@ impl Window {
 
         let mut events = Vec::new();
 
-        const FIRST_WM: u32 = WM_CREATE;
-        const LAST_WM: u32 = WM_DEVICECHANGE;
-
         loop {
             // Take a quick look at the event queue, if there aren't any, it comes out of the loop.
             // Note that PeekMessage always retrieves WM_QUIT messages, no matter which values
@@ -168,7 +170,7 @@ impl Window {
             // "The presence of a QS_ flag in the return value does not guarantee that a
             // subsequent call to the GetMessage or PeekMessage function will return a message."
             unsafe {
-                if PeekMessageW(&mut msg, hwnd, FIRST_WM, LAST_WM, PM_REMOVE) == false.into() {
+                if PeekMessageW(&raw mut msg, hwnd, FIRST_WM, LAST_WM, PM_REMOVE) == false.into() {
                     break;
                 }
             }
@@ -197,16 +199,15 @@ impl Window {
 
                     let keycode = {
                         let scancode = (msg.lParam as u32 >> 16) as u8;
-                        from_scancode(scancode as u16)
+                        from_scancode(u16::from(scancode))
                     };
 
-                    if keycode.is_some() {
-                        let keycode = keycode.unwrap();
-                        let source = InputSource::Key { source: keycode };
+                    if let Some(code) = keycode {
+                        let source = InputSource::Key { source: code };
 
                         if let Some(mut state) = self.inputs.remove(&source) {
                             state.increment_pressure_time();
-                            log::trace!("-> Key {:?} {:?}", source, state);
+                            log::trace!("-> Key {source:?} {state:?}");
                             self.inputs.insert(source, state);
                         } else {
                             self.process_wm_key_down_or_up(&msg, source, false);
@@ -220,7 +221,7 @@ impl Window {
 
                     let keycode = {
                         let scancode = (msg.lParam as u32 >> 16) as u8;
-                        from_scancode(scancode as u16)
+                        from_scancode(u16::from(scancode))
                     };
 
                     if let Some(keycode) = keycode {
@@ -244,14 +245,13 @@ impl Window {
                     let source = InputSource::Mouse {
                         source: MouseButton::Left,
                     };
-                    let mut state = if let Some(mut s) = self.inputs.remove(&source) {
-                        // Already pressed
-                        s.increment_pressure_time();
-                        s
-                    } else {
-                        // Newly pressed
-                        InputState::default()
-                    };
+                    let mut state = self.inputs
+                        .remove(&source)
+                        .map_or_else(InputState::default, |mut s| {
+                            // Already pressed
+                            s.increment_pressure_time();
+                            s
+                        });
                     log::trace!("-> MouseLeftDown ({x_pos}, {y_pos})");
                     state.set_coords(x_pos, y_pos);
                     self.inputs.insert(source, state);
@@ -334,7 +334,7 @@ impl Window {
                 _ => {
                     //println!("others WM: {}", msg.message);
                     unsafe {
-                        DispatchMessageW(&msg);
+                        DispatchMessageW(&raw const msg);
                     }
                 }
             }
@@ -364,7 +364,7 @@ impl Window {
                 }
             }
             Err(err) => {
-                log::error!("Push resize event: {}", err.to_string());
+                log::error!("Push resize event: {err}");
             }
         }
 
@@ -393,20 +393,17 @@ impl Window {
         self.inputs.insert(source, state);
     }
 
+    #[must_use]
     pub fn get_input_state(&self, kind: InputKind) -> Option<&InputState> {
-        let primary = self.input_mapping.get_primary(kind);
-        if primary.is_some() {
-            let source = primary.unwrap();
-            let state = self.inputs.get(source);
+        if let Some(primary) = self.input_mapping.get_primary(kind) {
+            let state = self.inputs.get(primary);
             if state.is_some() {
                 return state;
             }
-        };
+        }
 
-        let secondary = self.input_mapping.get_secondary(kind);
-        if secondary.is_some() {
-            let source = secondary.unwrap();
-            let state = self.inputs.get(source);
+        if let Some(secondary) = self.input_mapping.get_secondary(kind) {
+            let state = self.inputs.get(secondary);
             if state.is_some() {
                 return state;
             }
@@ -419,23 +416,23 @@ impl Window {
 
     pub fn hide_cursor(&self) {
         while unsafe { ShowCursor(false.into()) } >= 0 {
-            continue;
         }
     }
 
     pub fn show_cursor(&self) {
         while unsafe { ShowCursor(true.into()) } < 0 {
-            continue;
         }
     }
 
     // Mouse (or other device) camera rotation
+    #[must_use]
     pub fn handle_cursor_movement(&self) -> Option<Vec2> {
+        const SENSITIVITY: f32 = 0.4;
+
         if self.delta_cursor == Vec2::ZERO {
             return None;
         }
 
-        const SENSITIVITY: f32 = 0.4;
         let mut rotation = Vec2::new(0.0, 0.0);
 
         // In model space, the camera is looking negative along the Z axis, so
@@ -455,25 +452,30 @@ impl Window {
 
     //- Monitor --------------------------------------------------------------
 
-    pub fn current_monitor(&self) -> &Monitor {
+    #[must_use]
+    pub const fn current_monitor(&self) -> &Monitor {
         &self.monitor
     }
 
     //- Window Size Related Methods ------------------------------------------
 
-    pub fn inner_size(&self) -> WindowSize {
+    #[must_use]
+    pub const fn inner_size(&self) -> WindowSize {
         self.inner_size
     }
 
-    pub fn inner_width(&self) -> u16 {
+    #[must_use]
+    pub const fn inner_width(&self) -> u16 {
         self.inner_size.width
     }
 
-    pub fn inner_height(&self) -> u16 {
+    #[must_use]
+    pub const fn inner_height(&self) -> u16 {
         self.inner_size.height
     }
 
-    pub fn is_minimized(&self) -> bool {
+    #[must_use]
+    pub const fn is_minimized(&self) -> bool {
         self.minimized
     }
 
@@ -526,6 +528,8 @@ impl Window {
     // Direct proportionality between the actual lowest supported default framerate
     // and the current frame budget.
     // TODO: attenzione che con 240Mhz di monitor potrei avere il frame slug
+    #[allow(clippy::let_and_return)]
+    #[must_use]
     pub fn get_frame_modifier(&self) -> f64 {
         let x = 2.0 * self.last_frame_duration.as_secs_f64() / (1.0 / DEFAULT_FRAMERATE);
         //println!("{} {} {}", self.frame_budget.as_secs_f64(), 1.0 / DEFAULT_FRAMERATE, x);
@@ -550,7 +554,7 @@ extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPA
                     *inner = Some(value);
                 }
                 Err(err) => {
-                    log::error!("WM_SIZE {}", err.to_string());
+                    log::error!("WM_SIZE {err}");
                 }
             }
             0

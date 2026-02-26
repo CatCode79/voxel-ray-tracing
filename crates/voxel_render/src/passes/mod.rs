@@ -25,7 +25,7 @@ static SCREEN_SHADER_SRC: &str = include_str!("../shaders/screen.wgsl");
 
 //= BINDING TYPES ============================================================
 
-fn uniform_binding_type() -> BindingType {
+const fn uniform_binding_type() -> BindingType {
 	BindingType::Buffer {
 		ty: BufferBindingType::Uniform,
 		has_dynamic_offset: false,
@@ -33,7 +33,7 @@ fn uniform_binding_type() -> BindingType {
 	}
 }
 
-fn storage_binding_type(read_only: bool) -> BindingType {
+const fn storage_binding_type(read_only: bool) -> BindingType {
 	BindingType::Buffer {
 		ty: BufferBindingType::Storage { read_only },
 		has_dynamic_offset: false,

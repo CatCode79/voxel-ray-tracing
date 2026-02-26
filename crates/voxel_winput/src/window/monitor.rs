@@ -24,11 +24,13 @@ pub struct Monitor {
 }
 
 impl Monitor {
+    #[allow(clippy::missing_panics_doc)]
+    #[must_use]
     pub fn new(hwnd: HWND) -> Self {
         let handle = get_current_monitor(hwnd);
         let device_name = get_device_name(handle);
-        let refresh_rate = device_name.and(get_refresh_rate(device_name.unwrap().as_ptr()));
-        let device_name = device_name.and(String::from_utf16(&device_name.unwrap()).ok());
+        let refresh_rate = device_name.and_then(|_| get_refresh_rate(device_name.unwrap().as_ptr()));
+        let device_name = device_name.and_then(|_| String::from_utf16(&device_name.unwrap()).ok());
         Self {
             _handle: handle,
             device_name,
@@ -38,11 +40,13 @@ impl Monitor {
 
     //- Getters --------------------------------------------------------------
 
-    pub fn device_name(&self) -> Option<&String> {
+    #[must_use]
+    pub const fn device_name(&self) -> Option<&String> {
         self.device_name.as_ref()
     }
 
-    pub fn refresh_rate(&self) -> Option<f64> {
+    #[must_use]
+    pub const fn refresh_rate(&self) -> Option<f64> {
         self.refresh_rate
     }
 
@@ -56,6 +60,7 @@ impl Monitor {
         // 48 is because 24 is the minimum FPS for videos.
         // it will never happen given that all monitors have a minimum value of around 60,
         // but it is precisely because it could be just under 60 that I chose this low value.
+        #[allow(clippy::while_float)]
         while refresh_rate > 48.0 {
             refresh_rate /= 2.0;
         }
@@ -64,8 +69,7 @@ impl Monitor {
 }
 
 fn get_current_monitor(hwnd: HWND) -> HMONITOR {
-    let hmonitor = unsafe { MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST) };
-    hmonitor
+    unsafe { MonitorFromWindow(hwnd, MONITOR_DEFAULTTONEAREST) }
 }
 
 fn get_monitor_info(handle: HMONITOR) -> Option<MONITORINFOEXW> {
@@ -74,11 +78,11 @@ fn get_monitor_info(handle: HMONITOR) -> Option<MONITORINFOEXW> {
     let status = unsafe {
         GetMonitorInfoW(
             handle,
-            &mut monitor_info as *mut MONITORINFOEXW as *mut MONITORINFO,
+            (&raw mut monitor_info).cast::<MONITORINFO>(),
         )
     };
     if status == false.into() {
-        log::error!("{}", io::Error::last_os_error().to_string());
+        log::error!("{}", io::Error::last_os_error());
         None
     } else {
         Some(monitor_info)
@@ -94,8 +98,8 @@ fn get_refresh_rate(device_name: PCWSTR) -> Option<f64> {
     unsafe {
         let mut mode: DEVMODEW = mem::zeroed();
         mode.dmSize = size_of_val(&mode) as u16;
-        if EnumDisplaySettingsExW(device_name, ENUM_CURRENT_SETTINGS, &mut mode, 0) == true.into() {
-            Some(mode.dmDisplayFrequency as f64) // as millihertz
+        if EnumDisplaySettingsExW(device_name, ENUM_CURRENT_SETTINGS, &raw mut mode, 0) == true.into() {
+            Some(f64::from(mode.dmDisplayFrequency)) // as millihertz
         } else {
             None
         }

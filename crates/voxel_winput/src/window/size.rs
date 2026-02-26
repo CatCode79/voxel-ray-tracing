@@ -7,7 +7,8 @@ pub struct WindowSize {
 }
 
 impl WindowSize {
-    pub fn new(width: u16, height: u16) -> Self {
+    #[must_use]
+    pub const fn new(width: u16, height: u16) -> Self {
         Self { width, height }
     }
 }

@@ -5,8 +5,8 @@ use wgpu::{AddressMode, Device, Extent3d, FilterMode, MipmapFilterMode, Sampler,
 
 //= CONSTANTS ================================================================
 
-pub(crate) const RESULT_TEX_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
-pub(crate) const RESULT_TEX_USAGES: TextureUsages = TextureUsages::COPY_DST
+pub const RESULT_TEX_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
+pub const RESULT_TEX_USAGES: TextureUsages = TextureUsages::COPY_DST
     .union(TextureUsages::COPY_SRC)
     .union(TextureUsages::STORAGE_BINDING)
     .union(TextureUsages::TEXTURE_BINDING);
@@ -29,8 +29,8 @@ impl TextureHandler {
         let handle = device.create_texture(&TextureDescriptor {
             label: None,
             size: Extent3d {
-                width: size.x as u32,
-                height: size.y as u32,
+                width: u32::from(size.x),
+                height: u32::from(size.y),
                 depth_or_array_layers: 1,
             },
             mip_level_count: 1,
@@ -58,8 +58,8 @@ impl TextureHandler {
         });
         Self {
             handle,
-            view,
             sampler,
+            view,
         }
     }
 

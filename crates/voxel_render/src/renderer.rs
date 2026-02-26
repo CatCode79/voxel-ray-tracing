@@ -51,12 +51,12 @@ impl Renderer {
 
         let surface = create_surface(raw_display_handle, raw_window_handle, &instance)?;
 
-        let adapter = request_adapter(instance, &surface)?;
+        let adapter = request_adapter(&instance, &surface)?;
 
         let surface_config =
             create_surface_config(&surface, &adapter, surface_width, surface_height)?;
 
-        let (device, queue) = request_device(adapter, Renderer::max_buffer_sizes())?;
+        let (device, queue) = request_device(&adapter, Self::max_buffer_sizes())?;
 
         surface.configure(&device, &surface_config);
 
@@ -117,6 +117,7 @@ impl Renderer {
         })
     }
 
+    #[must_use]
     pub fn max_buffer_sizes() -> u32 {
         Limits::default().max_storage_buffer_binding_size
     }
@@ -135,7 +136,7 @@ impl Renderer {
     //= BUFFERS ==============================================================
 
     pub fn write_camera(&self, camera: &Camera) {
-        self.buffers.camera_buffer.write(&self.queue, &camera);
+        self.buffers.camera_buffer.write(&self.queue, camera);
     }
 
     pub fn write_settings(&self, settings: &Settings) {
@@ -153,7 +154,7 @@ impl Renderer {
     pub fn write_voxel_materials(&self, offset: u64, voxel_materials: &[Material]) {
         self.buffers
             .voxel_materials
-            .write_slice(&self.queue, offset, &voxel_materials);
+            .write_slice(&self.queue, offset, voxel_materials);
     }
 
     pub(crate) fn write_frame_data(&self, frame_data: &FrameData) {
@@ -167,8 +168,8 @@ impl Renderer {
         let height = height.get();
         if self.surface_config.width as u16 != width || self.surface_config.height as u16 != height
         {
-            self.surface_config.width = width as u32;
-            self.surface_config.height = height as u32;
+            self.surface_config.width = u32::from(width);
+            self.surface_config.height = u32::from(height);
             self.surface.configure(&self.device, &self.surface_config);
 
             let new_size = U16Vec2::new(width, height);
@@ -226,7 +227,7 @@ impl Renderer {
 
     //= UPDATE ===============================================================
 
-    pub fn reset_frame_counter(&mut self) {
+    pub const fn reset_frame_counter(&mut self) {
         self.frame_data.reset();
     }
 
@@ -262,8 +263,8 @@ impl Renderer {
                 aspect: wgpu::TextureAspect::All,
             },
             wgpu::Extent3d {
-                width: self.result_texture.size().x as u32,
-                height: self.result_texture.size().y as u32,
+                width: u32::from(self.result_texture.size().x),
+                height: u32::from(self.result_texture.size().y),
                 depth_or_array_layers: 1,
             },
         );
@@ -280,7 +281,7 @@ impl Renderer {
 
     //= SURFACE TEXTURE ======================================================
 
-    pub fn surface_size(&self) -> U16Vec2 {
+    pub const fn surface_size(&self) -> U16Vec2 {
         U16Vec2::new(
             self.surface_config.width as u16,
             self.surface_config.height as u16,

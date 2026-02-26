@@ -102,7 +102,7 @@ fn create_window(config: &Config) -> Window {
         env!("CARGO_PKG_VERSION")
     );
     let window = Window::new(
-        title,
+        &title,
         config.surface_width,
         config.surface_height,
         configure_input_mapping(),

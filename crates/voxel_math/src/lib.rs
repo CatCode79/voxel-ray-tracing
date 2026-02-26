@@ -34,16 +34,18 @@ pub struct BitField(u32);
 impl BitField {
     pub const ZERO: Self = Self(0);
 
-    pub fn raw(self) -> u32 {
+    #[must_use]
+    pub const fn raw(self) -> u32 {
         self.0
     }
 
-    pub fn set(&mut self, data: u32, len: u32, offset: u32) {
+    pub const fn set(&mut self, data: u32, len: u32, offset: u32) {
         let mask = !(!0 << len) << offset;
         self.0 = (self.0 & !mask) | (data << offset);
     }
 
-    pub fn get(self, len: u32, offset: u32) -> u32 {
+    #[must_use]
+    pub const fn get(self, len: u32, offset: u32) -> u32 {
         let mask = !(!0 << len) << offset;
         (self.0 & mask) >> offset
     }
@@ -122,9 +124,9 @@ impl Iterator for LineWalker {
 pub fn walk_line(a: IVec3, b: IVec3) -> impl Iterator<Item = IVec3> {
     let dist = (b - a).abs();
     let step = ivec3(
-        (b.x > a.x) as i32 * 2 - 1,
-        (b.y > a.y) as i32 * 2 - 1,
-        (b.z > a.z) as i32 * 2 - 1,
+        i32::from(b.x > a.x) * 2 - 1,
+        i32::from(b.y > a.y) * 2 - 1,
+        i32::from(b.z > a.z) * 2 - 1,
     );
 
     let (mode, p1, p2) = if dist.x >= dist.y && dist.x >= dist.z {

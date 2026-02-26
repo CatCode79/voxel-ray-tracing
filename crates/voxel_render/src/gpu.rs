@@ -7,11 +7,11 @@ use wgpu::{rwh, Adapter, CompositeAlphaMode, Device, DeviceDescriptor, Experimen
 
 //= ADAPTER ==================================================================
 
-pub(crate) fn request_adapter(
-    instance: Instance,
+pub fn request_adapter(
+    instance: &Instance,
     surface: &Surface<'static>,
 ) -> Result<Adapter, String> {
-    log_possible_adapters(supported_backends(), &instance);
+    log_possible_adapters(supported_backends(), instance);
 
     let result = async {
         instance
@@ -37,13 +37,13 @@ fn log_possible_adapters(backends: wgpu::Backends, wgpu_instance: &Instance) {
         .iter()
         .enumerate()
     {
-        log::debug!("Possible Adapter #{}: {}", i, get_adapter_info(&adapter))
+        log::debug!("Possible Adapter #{}: {}", i, get_adapter_info(adapter));
     }
 }
 
 /// Log the picked adapter info.
 fn log_picked_adapter(adapter: &Adapter) {
-    log::info!("Picked Adapter: {}", get_adapter_info(&adapter));
+    log::info!("Picked Adapter: {}", get_adapter_info(adapter));
     log::debug!("Its Features: {:?}", adapter.features());
 }
 
@@ -56,8 +56,8 @@ fn get_adapter_info(adapter: &Adapter) -> String {
 
 //= DEVICE AND QUEUE =========================================================
 
-pub(crate) fn request_device(
-    adapter: Adapter,
+pub fn request_device(
+    adapter: &Adapter,
     max_buffer_sizes: u32,
 ) -> Result<(Device, Queue), String> {
     let dq = async {
@@ -67,7 +67,7 @@ pub(crate) fn request_device(
                     required_features: Features::default(),
                     required_limits: Limits {
                         max_storage_buffer_binding_size: max_buffer_sizes,
-                        max_buffer_size: max_buffer_sizes as u64,
+                        max_buffer_size: u64::from(max_buffer_sizes),
                         ..Default::default()
                     },
                     label: None,
@@ -89,7 +89,7 @@ pub(crate) fn request_device(
 
 //= GPU INSTANCE =============================================================
 
-pub(crate) fn create_instance() -> Instance {
+pub fn create_instance() -> Instance {
     let flags = if cfg!(debug_assertions) {
         InstanceFlags::default()
     } else {
@@ -108,7 +108,7 @@ pub(crate) fn create_instance() -> Instance {
 
 //= SURFACE ==================================================================
 
-pub(crate) fn create_surface(
+pub fn create_surface(
     raw_display_handle: Result<rwh::RawDisplayHandle, rwh::HandleError>,
     raw_window_handle: Result<rwh::RawWindowHandle, rwh::HandleError>,
     instance: &Instance,
@@ -132,7 +132,7 @@ pub(crate) fn create_surface(
     Ok(surface)
 }
 
-pub(crate) fn create_surface_config(
+pub fn create_surface_config(
     surface: &Surface<'static>,
     adapter: &Adapter,
     width: u16,
@@ -153,8 +153,8 @@ pub(crate) fn create_surface_config(
     Ok(SurfaceConfiguration {
         usage: TextureUsages::RENDER_ATTACHMENT,
         format: *texture_format,
-        width: width as u32,
-        height: height as u32,
+        width: u32::from(width),
+        height: u32::from(height),
         desired_maximum_frame_latency: 2,
         present_mode: PresentMode::Fifo,
         alpha_mode: CompositeAlphaMode::Auto,

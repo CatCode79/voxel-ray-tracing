@@ -59,17 +59,19 @@ impl GameState {
             0.3, // was 0.2
         );
 
-        let mut settings = Settings::default();
-        settings.max_ray_bounces = 4;
-        settings.samples_per_pixel = 1;
-        settings.sun_intensity = 4.0;
-        settings.sky_color = [0.81, 0.93, 1.0];
-        settings.sun_pos = Vec3::new(
+        let sun_pos = Vec3::new(
             0.0f32.to_radians().sin() * 500.0,
             0.0f32.to_radians().cos() * 500.0,
             world.size as f32 * 0.5,
-        )
-        .to_array();
+        ).to_array();
+        let settings = Settings {
+            max_ray_bounces: 4,
+            samples_per_pixel: 1,
+            sun_intensity: 4.0,
+            sky_color: [0.81, 0.93, 1.0],
+            sun_pos,
+            ..Settings::default()
+        };
 
         let world_gen = WorldGen::new(fastrand::i64(..));
         world_gen.populate(IVec3::ZERO, IVec3::splat(world.size as i32), world);
@@ -93,7 +95,7 @@ impl GameState {
     pub fn update(
         &mut self,
         window: &Window,
-        mut world: &mut World,
+        world: &mut World,
         renderer: &mut Renderer,
     ) -> UpdateResult {
         let mut output = UpdateResult::default();

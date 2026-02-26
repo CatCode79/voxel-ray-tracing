@@ -10,7 +10,7 @@ mod world;
 //= RE-EXPORTS ===============================================================
 
 pub use camera::*;
-pub(crate) use frame::*;
+pub use frame::*;
 pub use nodes::*;
 pub use settings::*;
 pub use voxel::*;
@@ -24,7 +24,7 @@ use std::slice;
 
 //= SIMPLE BUFFER ============================================================
 
-pub(crate) struct SimpleBuffer<T>(pub(crate) Buffer, std::marker::PhantomData<T>);
+pub struct SimpleBuffer<T>(pub Buffer, std::marker::PhantomData<T>);
 
 impl<T> SimpleBuffer<T> {
     pub(crate) fn new(device: &Device, label: &str, usage: BufferUsages) -> Self {
@@ -39,7 +39,7 @@ impl<T> SimpleBuffer<T> {
 
     pub(crate) fn write(&self, queue: &Queue, value: &T) {
         let coerced: *const T = value;
-        let ptr = coerced as *const u8;
+        let ptr = coerced.cast::<u8>();
         let size = size_of::<T>();
         #[allow(unsafe_code)]
         let slice = unsafe { slice::from_raw_parts(ptr, size) };
@@ -49,8 +49,8 @@ impl<T> SimpleBuffer<T> {
 
 impl<T, const N: usize> SimpleBuffer<[T; N]> {
     pub(crate) fn write_slice(&self, queue: &Queue, idx: u64, value: &[T]) {
-        let ptr = value.as_ptr() as *const u8;
-        let size = size_of::<T>() * value.len();
+        let ptr = value.as_ptr().cast::<u8>();
+        let size = size_of_val(value);
         #[allow(unsafe_code)]
         let slice = unsafe { slice::from_raw_parts(ptr, size) };
         queue.write_buffer(&self.0, idx, slice);
@@ -59,13 +59,13 @@ impl<T, const N: usize> SimpleBuffer<[T; N]> {
 
 //= BUFFERS ==================================================================
 
-pub(crate) struct Buffers {
-    pub(crate) camera_buffer: SimpleBuffer<Camera>,
-    pub(crate) settings: SimpleBuffer<Settings>,
-    pub(crate) world_data: SimpleBuffer<WorldData>,
-    pub(crate) nodes: NodesBuffer,
-    pub(crate) voxel_materials: SimpleBuffer<[Material; 256]>,
-    pub(crate) frame_count: SimpleBuffer<FrameData>,
+pub struct Buffers {
+    pub camera_buffer: SimpleBuffer<Camera>,
+    pub settings: SimpleBuffer<Settings>,
+    pub world_data: SimpleBuffer<WorldData>,
+    pub nodes: NodesBuffer,
+    pub voxel_materials: SimpleBuffer<[Material; 256]>,
+    pub frame_count: SimpleBuffer<FrameData>,
 }
 
 impl Buffers {

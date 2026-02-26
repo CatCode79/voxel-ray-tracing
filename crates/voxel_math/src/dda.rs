@@ -7,6 +7,7 @@ use glam::{IVec3, Vec3};
 /// Takes a rotation (the rotation around the X, Y, and Z axis), and
 /// creates a normalised vector ray in the facing direction.
 /// the rotation values should be in radians (0..TAU)
+#[must_use]
 pub fn axis_rot_to_ray(rot: Vec3) -> Vec3 {
     // the Z rotation doesn't affect the ray
     // the Y rotation effects the ray's X and Z
@@ -40,9 +41,9 @@ pub fn cast_ray(
     // length of a line in same direction as the ray,
     // that travels 1 unit in the X, Y, Z
     let unit_step_size = Vec3::new(
-        (1.0 + (dir.y / dir.x) * (dir.y / dir.x) + (dir.z / dir.x) * (dir.z / dir.x)).sqrt(),
-        (1.0 + (dir.x / dir.y) * (dir.x / dir.y) + (dir.z / dir.y) * (dir.z / dir.y)).sqrt(),
-        (1.0 + (dir.x / dir.z) * (dir.x / dir.z) + (dir.y / dir.z) * (dir.y / dir.z)).sqrt(),
+        (dir.z / dir.x).mul_add(dir.z / dir.x, (dir.y / dir.x).mul_add(dir.y / dir.x, 1.0)).sqrt(),
+        (dir.z / dir.y).mul_add(dir.z / dir.y, (dir.x / dir.y).mul_add(dir.x / dir.y, 1.0)).sqrt(),
+        (dir.y / dir.z).mul_add(dir.y / dir.z, (dir.x / dir.z).mul_add(dir.x / dir.z, 1.0)).sqrt(),
     );
 
     let mut map_check = start.floor().as_ivec3();
@@ -77,6 +78,7 @@ pub fn cast_ray(
     let mut dist: f32 = 0.0;
     let mut prev_map_check;
 
+    #[allow(clippy::while_float)]
     while dist < max_dist {
         prev_map_check = map_check;
         // walk

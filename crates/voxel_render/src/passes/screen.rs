@@ -70,8 +70,8 @@ impl ScreenPass {
 
 		Self {
 			pipeline,
-			bind_group,
 			bind_group_layout,
+			bind_group,
 		}
 	}
 

@@ -57,8 +57,8 @@ impl RayTracerPass {
 
 		Self {
 			pipeline,
-			bind_group,
 			bind_group_layout,
+			bind_group,
 		}
 	}
 
@@ -97,6 +97,6 @@ impl RayTracerPass {
 		});
 		pass.set_pipeline(&self.pipeline);
 		pass.set_bind_group(0, &self.bind_group, &[]);
-		pass.dispatch_workgroups(workgroups.x as u32, workgroups.y as u32, 1);
+		pass.dispatch_workgroups(u32::from(workgroups.x), u32::from(workgroups.y), 1);
 	}
 }
