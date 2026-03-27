@@ -86,74 +86,17 @@ impl Aabb {
 
     #[must_use]
     pub fn clip_x_collide(&self, c: &Self, mut a: f32) -> f32 {
-        if c.to.y <= self.from.y || c.from.y >= self.to.y {
-            return a;
-        }
-        if c.to.z <= self.from.z || c.from.z >= self.to.z {
-            return a;
-        }
-
-        if a > 0.0 && c.to.x <= self.from.x {
-            let max = self.from.x - c.to.x - EPSILON;
-            if max < a {
-                a = max;
-            }
-        }
-        if a < 0.0 && c.from.x >= self.to.x {
-            let max = self.to.x - c.from.x + EPSILON;
-            if max > a {
-                a = max;
-            }
-        }
-        a
+        clip_axis_body!(self, c, a; move=x, check=y, z)
     }
 
     #[must_use]
     pub fn clip_y_collide(&self, c: &Self, mut a: f32) -> f32 {
-        if c.to.x <= self.from.x || c.from.x >= self.to.x {
-            return a;
-        }
-        if c.to.z <= self.from.z || c.from.z >= self.to.z {
-            return a;
-        }
-
-        if a > 0.0 && c.to.y <= self.from.y {
-            let max = self.from.y - c.to.y - EPSILON;
-            if max < a {
-                a = max;
-            }
-        }
-        if a < 0.0 && c.from.y >= self.to.y {
-            let max = self.to.y - c.from.y + EPSILON;
-            if max > a {
-                a = max;
-            }
-        }
-        a
+        clip_axis_body!(self, c, a; move=y, check=x, z)
     }
 
     #[must_use]
     pub fn clip_z_collide(&self, c: &Self, mut a: f32) -> f32 {
-        if c.to.x <= self.from.x || c.from.x >= self.to.x {
-            return a;
-        }
-        if c.to.y <= self.from.y || c.from.y >= self.to.y {
-            return a;
-        }
-
-        if a > 0.0 && c.to.z <= self.from.z {
-            let max = self.from.z - c.to.z - EPSILON;
-            if max < a {
-                a = max;
-            }
-        }
-        if a < 0.0 && c.from.z >= self.to.z {
-            let max = self.to.z - c.from.z + EPSILON;
-            if max > a {
-                a = max;
-            }
-        }
-        a
+        clip_axis_body!(self, c, a; move=z, check=x, y)
     }
 
     #[must_use]

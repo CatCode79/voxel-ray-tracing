@@ -1,4 +1,4 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use windows_sys::Win32::{
     System::SystemServices::LANG_KOREAN, UI::Input::KeyboardAndMouse::GetKeyboardLayout,
@@ -6,7 +6,7 @@ use windows_sys::Win32::{
 
 use crate::{primarylangid, unsigned_loword};
 
-//= KEY CODE (took from winit 0.29.15) =======================================
+//= KEY CODE (took from winit 0.29.15) =============================================================
 
 /// Code representing the location of a physical key
 ///
@@ -463,7 +463,7 @@ pub enum KeyCode {
     F35,
 }
 
-//= SCAN CODE CONVERSION (took from winit 0.29.15) ===========================
+//= SCAN CODE CONVERSION (took from winit 0.29.15) =================================================
 
 #[allow(clippy::too_many_lines)]
 #[must_use]

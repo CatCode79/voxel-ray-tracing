@@ -1,9 +1,9 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::input::InputSource;
 use crate::mapping::kind::InputKind;
 
-//= INPUT MAP ================================================================
+//= INPUT MAP ======================================================================================
 
 #[derive(Debug)]
 pub struct InputMapping {
@@ -20,7 +20,7 @@ impl InputMapping {
         }
     }
 
-    //- Getters --------------------------------------------------------------
+    //- Getters ------------------------------------------------------------------------------------
 
     #[must_use]
     pub fn get_primary(&self, kind: InputKind) -> Option<&InputSource> {
@@ -32,7 +32,7 @@ impl InputMapping {
         self.secondary[kind as usize].as_ref()
     }
 
-    //- Setters --------------------------------------------------------------
+    //- Setters ------------------------------------------------------------------------------------
 
     pub fn set_primary(&mut self, kind: InputKind, source: InputSource) {
         self.primary[kind as usize] = Some(source);

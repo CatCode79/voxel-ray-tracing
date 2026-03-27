@@ -1,4 +1,4 @@
-//= MODS =====================================================================
+//= MODS ===========================================================================================
 
 extern crate core;
 
@@ -6,18 +6,17 @@ mod buffers;
 mod gpu;
 mod passes;
 mod renderer;
-mod shader;
 mod texture;
 
-//= RE-EXPORTS ===============================================================
+//= RE-EXPORTS =====================================================================================
 
 pub use buffers::*;
 pub use renderer::*;
 
-//= BACKENDS =================================================================
+//= BACKENDS =======================================================================================
 
 /// The backends are in order of support, the greater the first.
-fn supported_backends() -> wgpu::Backends {
+const fn supported_backends() -> wgpu::Backends {
     #[cfg(target_os = "windows")]
     return wgpu::Backends::VULKAN /*| wgpu::Backends::DX12*/;
 

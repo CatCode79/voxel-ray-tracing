@@ -1,11 +1,11 @@
-//= MODS =====================================================================
+//= MODS ===========================================================================================
 
 pub mod game;
 pub mod open_simplex;
 pub mod player;
 pub mod world;
 
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::game::GameState;
 use crate::world::World;
@@ -22,11 +22,11 @@ use log::LevelFilter;
 
 use std::process;
 
-//= CONSTS ===================================================================
+//= CONSTS =========================================================================================
 
 const CONFIG_FILEPATH: &str = "config.json";
 
-//= MAIN =====================================================================
+//= MAIN ===========================================================================================
 
 fn main() -> process::ExitCode {
     // Possible values for filter are, in order:
@@ -51,7 +51,7 @@ fn main() -> process::ExitCode {
     let _num_cpus = num_cpus::get() as u16;
 
     loop {
-        //- Window Inputs and Events Acquisition -----------------------------
+        //- Window Inputs and Events Acquisition ---------------------------------------------------
 
         {
             profiling::scope!("Window Process Events");
@@ -65,14 +65,14 @@ fn main() -> process::ExitCode {
             }
         }
 
-        //- Game Logic -------------------------------------------------------
+        //- Game Logic -----------------------------------------------------------------------------
 
         let update_rs = {
             profiling::scope!("Game State Update");
             game_state.update(&window, &mut world, &mut renderer)
         };
 
-        //- Renderer Logic ---------------------------------------------------
+        //- Renderer Logic -------------------------------------------------------------------------
 
         if !window.is_minimized() {
             profiling::scope!("Renderer Update");
@@ -84,7 +84,7 @@ fn main() -> process::ExitCode {
                 .unwrap_or_else(|e| handle_error_and_panic(e));
         }
 
-        //- Frame Sync -------------------------------------------------------
+        //- Frame Sync -----------------------------------------------------------------------------
 
         {
             profiling::scope!("Wait For Frame Sync");

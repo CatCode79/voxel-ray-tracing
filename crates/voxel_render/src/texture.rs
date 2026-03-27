@@ -1,4 +1,4 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use glam::U16Vec2;
 use wgpu::{
@@ -7,7 +7,7 @@ use wgpu::{
     TextureViewDescriptor,
 };
 
-//= CONSTANTS ================================================================
+//= CONSTANTS ======================================================================================
 
 pub const RESULT_TEX_FORMAT: TextureFormat = TextureFormat::Rgba8Unorm;
 pub const RESULT_TEX_USAGES: TextureUsages = TextureUsages::COPY_DST
@@ -15,9 +15,9 @@ pub const RESULT_TEX_USAGES: TextureUsages = TextureUsages::COPY_DST
     .union(TextureUsages::STORAGE_BINDING)
     .union(TextureUsages::TEXTURE_BINDING);
 
-//= TEXTURE ==================================================================
+//= TEXTURE ========================================================================================
 
-pub(crate) struct TextureHandler {
+pub(super) struct TextureHandler {
     pub(crate) handle: wgpu::Texture,
     pub(crate) sampler: Sampler,
     pub(crate) view: TextureView,

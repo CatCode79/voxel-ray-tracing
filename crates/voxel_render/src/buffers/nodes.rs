@@ -1,4 +1,4 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::Voxel;
 
@@ -8,7 +8,7 @@ use wgpu::{Buffer, BufferDescriptor, BufferUsages, Device, Queue};
 
 use std::slice;
 
-//= NODE =====================================================================
+//= NODE ===========================================================================================
 
 /// Represents a node in the sparse voxel octree (SVO) that is the world.
 ///
@@ -116,7 +116,7 @@ impl Node {
     }
 }
 
-//= NODES BUFFER =============================================================
+//= NODES BUFFER ===================================================================================
 
 pub struct NodesBuffer {
     pub buf: Buffer,
@@ -128,7 +128,7 @@ impl NodesBuffer {
     pub fn new(device: &Device, label: &str, usage: BufferUsages, count: u64) -> Self {
         let buf = device.create_buffer(&BufferDescriptor {
             label: Some(label),
-            size: u64::from(count) * size_of::<Node>() as u64,
+            size: count * size_of::<Node>() as u64,
             usage,
             mapped_at_creation: false,
         });
@@ -136,7 +136,7 @@ impl NodesBuffer {
     }
 
     pub fn write(&self, queue: &Queue, offset: u64, nodes: &[Node]) {
-        let nodes_cut = (nodes.len() as u64).min(u64::from(self.count) - offset);
+        let nodes_cut = (nodes.len() as u64).min(self.count - offset);
         let nodes: &[Node] = &nodes[0..nodes_cut as usize];
 
         let ptr = nodes.as_ptr().cast::<u8>();

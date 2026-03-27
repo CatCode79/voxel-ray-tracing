@@ -1,15 +1,16 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::open_simplex::{NoiseMap, init_gradients};
 
 use voxel_math::aabb::Aabb;
+use voxel_math::walker::walk_line;
 use voxel_render::{Node, Voxel};
 
 use glam::{IVec3, Vec3, ivec3, vec2, vec3};
 
 use std::ops::Range;
 
-//= WORLD ====================================================================
+//= WORLD ==========================================================================================
 
 #[derive(Clone, Debug)]
 pub enum WorldErr {
@@ -549,7 +550,7 @@ fn spawn_tree(world: &mut World, surface: IVec3, tree: &TreeGen) {
 
         world.sphere(end, 3, tree.leaves, tree.leaves_decay);
 
-        let line = voxel_math::walk_line(start, end);
+        let line = walk_line(start, end);
         for pos in line {
             drop(world.set_voxel(pos, tree.bark));
         }

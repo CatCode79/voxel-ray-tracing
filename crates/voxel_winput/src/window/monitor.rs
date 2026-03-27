@@ -1,4 +1,4 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::window::DEFAULT_FRAMERATE;
 
@@ -15,7 +15,7 @@ use windows_sys::{
 
 use std::{io, mem, time};
 
-//= MONITOR ==================================================================
+//= MONITOR ========================================================================================
 
 pub struct Monitor {
     _handle: HMONITOR,
@@ -39,7 +39,7 @@ impl Monitor {
         }
     }
 
-    //- Getters --------------------------------------------------------------
+    //- Getters ------------------------------------------------------------------------------------
 
     #[must_use]
     pub const fn device_name(&self) -> Option<&String> {
@@ -51,7 +51,7 @@ impl Monitor {
         self.refresh_rate
     }
 
-    //- Refresh Rate ---------------------------------------------------------
+    //- Refresh Rate -------------------------------------------------------------------------------
 
     pub(crate) fn calculate_frame_budget(&self) -> time::Duration {
         let Some(mut refresh_rate) = self.refresh_rate else {

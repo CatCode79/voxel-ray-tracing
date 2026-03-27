@@ -13,7 +13,7 @@ use wgpu::{
 use crate::passes::SCREEN_SHADER_SRC;
 use crate::texture::TextureHandler;
 
-//= SCREEN (FRAGMENT) SHADER =================================================
+//= SCREEN (FRAGMENT) SHADER =======================================================================
 
 pub(crate) struct ScreenPass {
     pub(crate) pipeline: RenderPipeline,

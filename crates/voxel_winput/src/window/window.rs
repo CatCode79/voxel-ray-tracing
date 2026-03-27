@@ -1,4 +1,4 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::input::{
     InputFlags, InputSource, InputState, MouseButton, from_scancode, process_wm_input,
@@ -23,7 +23,7 @@ use windows_sys::{
 use std::num::{NonZeroIsize, NonZeroU16};
 use std::{io, mem, process, ptr, sync, thread, time};
 
-//= WINDOW ===================================================================
+//= WINDOW =========================================================================================
 
 static RESIZE_NEEDED: sync::Mutex<Option<U16Vec2>> = sync::Mutex::new(None);
 
@@ -372,7 +372,7 @@ impl Window {
         events
     }
 
-    //- Keyboard Related Events ----------------------------------------------
+    //- Keyboard Related Events --------------------------------------------------------------------
 
     // TODO: ricordarsi della context-mode flag:
     // https://learn.microsoft.com/en-us/windows/win32/inputdev/about-keyboard-input#context-code
@@ -413,7 +413,7 @@ impl Window {
         None
     }
 
-    //- Mouse Related Events -------------------------------------------------
+    //- Mouse Related Events -----------------------------------------------------------------------
 
     pub fn hide_cursor(&self) {
         while unsafe { ShowCursor(false.into()) } >= 0 {}
@@ -449,14 +449,14 @@ impl Window {
         Some(rotation)
     }
 
-    //- Monitor --------------------------------------------------------------
+    //- Monitor ------------------------------------------------------------------------------------
 
     #[must_use]
     pub const fn current_monitor(&self) -> &Monitor {
         &self.monitor
     }
 
-    //- Window Size Related Methods ------------------------------------------
+    //- Window Size Related Methods ----------------------------------------------------------------
 
     #[must_use]
     pub const fn inner_size(&self) -> WindowSize {
@@ -478,7 +478,7 @@ impl Window {
         self.minimized
     }
 
-    //- Raw Window Display and Handle ----------------------------------------
+    //- Raw Window Display and Handle --------------------------------------------------------------
 
     pub fn raw_display_handle(&self) -> Result<rwh::RawDisplayHandle, rwh::HandleError> {
         Ok(rwh::RawDisplayHandle::Windows(
@@ -497,7 +497,7 @@ impl Window {
         Ok(rwh::RawWindowHandle::Win32(window_handle))
     }
 
-    //- Frame Time and Sync --------------------------------------------------
+    //- Frame Time and Sync ------------------------------------------------------------------------
 
     // TODO: al posto del frame budget utilizzare una frazione di quel tempo tale per cui
     //  il resto del wait venga fatto dalla present
@@ -536,7 +536,7 @@ impl Window {
     }
 }
 
-//= EXTERNAL SYSTEM WINDOW PROCEDURE =========================================
+//= EXTERNAL SYSTEM WINDOW PROCEDURE ===============================================================
 
 extern "system" fn wndproc(hwnd: HWND, message: u32, wparam: WPARAM, lparam: LPARAM) -> LRESULT {
     // List of window notifications:

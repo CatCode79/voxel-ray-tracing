@@ -13,7 +13,7 @@ use crate::buffers::Buffers;
 use crate::passes::{PATH_TRACER_SRC, storage_binding_type, uniform_binding_type};
 use crate::texture::{RESULT_TEX_FORMAT, TextureHandler};
 
-//= PATH TRACER (COMPUTE) SHADER =============================================
+//= PATH TRACER (COMPUTE) SHADER ===================================================================
 
 pub(crate) struct PathTracerPass {
     pub pipeline: ComputePipeline,

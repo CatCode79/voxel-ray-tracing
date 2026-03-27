@@ -13,7 +13,7 @@ use crate::bind_group_layout_entries;
 use crate::passes::DENOISER_SRC;
 use crate::texture::{RESULT_TEX_FORMAT, TextureHandler};
 
-//= DENOISER (COMPUTE) SHADER ================================================
+//= DENOISER (COMPUTE) SHADER ======================================================================
 
 pub(crate) struct DenoiserPass {
     pub pipeline: ComputePipeline,

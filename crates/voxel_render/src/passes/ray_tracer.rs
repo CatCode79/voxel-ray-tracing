@@ -13,7 +13,7 @@ use crate::buffers::Buffers;
 use crate::passes::{RAY_TRACER_SRC, storage_binding_type, uniform_binding_type};
 use crate::texture::{RESULT_TEX_FORMAT, TextureHandler};
 
-//= RAY TRACER (COMPUTE) SHADER ==============================================
+//= RAY TRACER (COMPUTE) SHADER ====================================================================
 
 pub(crate) struct RayTracerPass {
     pub pipeline: ComputePipeline,

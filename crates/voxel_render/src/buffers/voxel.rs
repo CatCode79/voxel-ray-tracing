@@ -1,4 +1,4 @@
-//= VOXEL NAMES ==============================================================
+//= VOXEL NAMES ====================================================================================
 
 pub static VOXEL_NAMES: &[&str] = &[
     "Air",
@@ -26,36 +26,36 @@ pub static VOXEL_NAMES: &[&str] = &[
     "Bright",
 ];
 
-//= VOXEL MATERIALS ==========================================================
+//= VOXEL MATERIALS ================================================================================
 
 #[rustfmt::skip]
 pub static VOXEL_MATERIALS: &[Material] = &[
-    Material::new_empty(),                                               // Air
-    Material::new_solid([0.40, 0.40, 0.40], 1.0),           // Stone
-    Material::new_solid([0.40, 0.20, 0.00], 1.0),           // Dirt
-    Material::new_solid([0.011, 0.58, 0.11], 1.0),          // Grass
-    Material::new_solid([1.0; 3], 0.8),                     // Snow
-    Material::new_solid([0.2, 0.4, 0.2], 1.0),              // Dead Grass
-    Material::new_solid([1.0, 0.0, 0.0], 1.0),              // Moist Grass
-    Material::new_solid([0.99, 0.92, 0.53], 0.9),           // Sand
-    Material::new_solid([0.22, 0.13, 0.02], 0.8),           // Mud
-    Material::new_solid([0.35, 0.30, 0.25], 0.8),           // Clay
-    Material::new_solid([1.00, 0.90, 0.20], 0.0).emit(2.0), // Fire
-    Material::new_solid([0.75, 0.18, 0.01], 1.0).emit(1.0), // Magma
-    Material::new_solid([0.076, 0.563, 0.563], 0.0),        // Water
-    Material::new_solid([0.25, 0.10, 0.00], 1.0),           // Oak Wood
-    Material::new_solid([0.23, 0.52, 0.00], 1.0),           // Oak Leaves
-    Material::new_solid([1.0; 3], 1.0),                     // Birch Wood
-    Material::new_solid([0.43, 0.72, 0.00], 1.0),           // Birch Leaves
-    Material::new_solid([0.06, 0.04, 0.00], 1.0),           // Spruce Wood
-    Material::new_solid([0.04, 0.22, 0.00], 1.0),           // Spruce Leaves
-    Material::new_solid([0.0, 0.30, 0.0], 1.0),             // Cactus
-    Material::new_solid([0.83, 0.68, 0.22], 0.3),           // Gold
-    Material::new_solid([1.0; 3], 0.0),                     // Mirror
-    Material::new_solid([1.0; 3], 1.0).emit(5.0),   // Bright
+    Material::new_empty(),                                                          // Air
+    Material::new_solid([0.40,  0.40,  0.40 ], 1.0),                   // Stone
+    Material::new_solid([0.40,  0.20,  0.00 ], 1.0),                   // Dirt
+    Material::new_solid([0.011, 0.58,  0.11 ], 1.0),                   // Grass
+    Material::new_solid([1.0,   1.0,   1.0  ], 0.8),                   // Snow
+    Material::new_solid([0.2,   0.4,   0.2  ], 1.0),                   // Dead Grass
+    Material::new_solid([1.0,   0.0,   0.0  ], 1.0),                   // Moist Grass
+    Material::new_solid([0.99,  0.92,  0.53 ], 0.9),                   // Sand
+    Material::new_solid([0.22,  0.13,  0.02 ], 0.8),                   // Mud
+    Material::new_solid([0.35,  0.30,  0.25 ], 0.8),                   // Clay
+    Material::new_solid([1.00,  0.90,  0.20 ], 0.0).emit(2.0), // Fire
+    Material::new_solid([0.75,  0.18,  0.01 ], 1.0).emit(1.0), // Magma
+    Material::new_solid([0.076, 0.563, 0.563], 0.0),                   // Water
+    Material::new_solid([0.25,  0.10,  0.00 ], 1.0),                   // Oak Wood
+    Material::new_solid([0.23,  0.52,  0.00 ], 1.0),                   // Oak Leaves
+    Material::new_solid([1.0,   1.0,   1.0  ], 1.0),                   // Birch Wood
+    Material::new_solid([0.43,  0.72,  0.00 ], 1.0),                   // Birch Leaves
+    Material::new_solid([0.06,  0.04,  0.00 ], 1.0),                   // Spruce Wood
+    Material::new_solid([0.04,  0.22,  0.00 ], 1.0),                   // Spruce Leaves
+    Material::new_solid([0.0,   0.30,  0.0  ], 1.0),                   // Cactus
+    Material::new_solid([0.83,  0.68,  0.22 ], 0.3),                   // Gold
+    Material::new_solid([1.0,   1.0,   1.0  ], 0.0),                   // Mirror
+    Material::new_solid([1.0,   1.0,   1.0  ], 1.0).emit(5.0), // Bright
 ];
 
-//= VOXEL ====================================================================
+//= VOXEL ==========================================================================================
 
 #[derive(Clone, Copy, PartialEq, Eq)]
 #[repr(transparent)]
@@ -114,7 +114,7 @@ impl Voxel {
     }
 }
 
-//= MATERIAL =================================================================
+//= MATERIAL =======================================================================================
 
 #[derive(Clone, Copy)]
 #[repr(C)]

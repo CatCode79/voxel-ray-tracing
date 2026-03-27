@@ -16,14 +16,14 @@ pub(crate) use screen::*;
 
 use wgpu::{BindingType, BufferBindingType};
 
-//= CONSTANTS ================================================================
+//= CONSTANTS ======================================================================================
 
 static RAY_TRACER_SRC: &str = include_str!("../shaders/ray_tracer.wgsl");
 static PATH_TRACER_SRC: &str = include_str!("../shaders/path_tracer.wgsl");
 static DENOISER_SRC: &str = include_str!("../shaders/denoiser.wgsl");
 static SCREEN_SHADER_SRC: &str = include_str!("../shaders/screen.wgsl");
 
-//= BINDING TYPES ============================================================
+//= BINDING TYPES ==================================================================================
 
 const fn uniform_binding_type() -> BindingType {
     BindingType::Buffer {
@@ -41,7 +41,7 @@ const fn storage_binding_type(read_only: bool) -> BindingType {
     }
 }
 
-//= MACROS ===================================================================
+//= MACROS =========================================================================================
 
 #[macro_export]
 macro_rules! bind_group_layout_entries {

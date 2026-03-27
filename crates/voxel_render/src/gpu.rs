@@ -1,16 +1,16 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::supported_backends;
 
 use pollster::FutureExt;
 use wgpu::{
-    Adapter, CompositeAlphaMode, Device, DeviceDescriptor, ExperimentalFeatures, Features,
-    Instance, InstanceDescriptor, InstanceFlags, Limits, MemoryHints, PowerPreference, PresentMode,
-    Queue, RequestAdapterOptions, Surface, SurfaceConfiguration, SurfaceTargetUnsafe,
-    TextureUsages, Trace, rwh,
+    Adapter, BackendOptions, CompositeAlphaMode, Device, DeviceDescriptor, ExperimentalFeatures,
+    Features, Instance, InstanceDescriptor, InstanceFlags, Limits, MemoryBudgetThresholds,
+    MemoryHints, PowerPreference, PresentMode, Queue, RequestAdapterOptions, Surface,
+    SurfaceConfiguration, SurfaceTargetUnsafe, TextureUsages, Trace, rwh,
 };
 
-//= ADAPTER ==================================================================
+//= ADAPTER ========================================================================================
 
 pub fn request_adapter(instance: &Instance, surface: &Surface<'static>) -> Result<Adapter, String> {
     log_possible_adapters(supported_backends(), instance);
@@ -56,7 +56,7 @@ fn get_adapter_info(adapter: &Adapter) -> String {
         .replace(" }", "")
 }
 
-//= DEVICE AND QUEUE =========================================================
+//= DEVICE AND QUEUE ===============================================================================
 
 pub fn request_device(adapter: &Adapter, max_buffer_sizes: u64) -> Result<(Device, Queue), String> {
     let dq = async {
@@ -65,7 +65,7 @@ pub fn request_device(adapter: &Adapter, max_buffer_sizes: u64) -> Result<(Devic
                 required_features: Features::default(),
                 required_limits: Limits {
                     max_storage_buffer_binding_size: max_buffer_sizes,
-                    max_buffer_size: u64::from(max_buffer_sizes),
+                    max_buffer_size: max_buffer_sizes,
                     ..Default::default()
                 },
                 label: None,
@@ -84,7 +84,7 @@ pub fn request_device(adapter: &Adapter, max_buffer_sizes: u64) -> Result<(Devic
     Ok(dq)
 }
 
-//= GPU INSTANCE =============================================================
+//= GPU INSTANCE ===================================================================================
 
 pub fn create_instance() -> Instance {
     let flags = if cfg!(debug_assertions) {
@@ -98,14 +98,14 @@ pub fn create_instance() -> Instance {
     let desc = InstanceDescriptor {
         backends: supported_backends(),
         flags,
-        memory_budget_thresholds: Default::default(),
-        backend_options: Default::default(),
+        memory_budget_thresholds: MemoryBudgetThresholds::default(),
+        backend_options: BackendOptions::default(),
         display: None,
     };
     Instance::new(desc)
 }
 
-//= SURFACE ==================================================================
+//= SURFACE ========================================================================================
 
 pub fn create_surface(
     raw_display_handle: Result<rwh::RawDisplayHandle, rwh::HandleError>,

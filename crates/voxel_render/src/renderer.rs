@@ -1,4 +1,4 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::gpu::{
     create_instance, create_surface, create_surface_config, request_adapter, request_device,
@@ -9,12 +9,15 @@ use crate::{Buffers, Camera, FrameData, Material, Node, Settings, WorldData};
 
 use glam::U16Vec2;
 use raw_window_handle as rwh;
-use wgpu::{CommandBuffer, CommandEncoder, CommandEncoderDescriptor, CurrentSurfaceTexture, Device, Limits, Queue, Surface, SurfaceConfiguration, SurfaceTexture, TextureView, TextureViewDescriptor};
+use wgpu::{
+    CommandBuffer, CommandEncoder, CommandEncoderDescriptor, CurrentSurfaceTexture, Device, Limits,
+    Queue, Surface, SurfaceConfiguration, SurfaceTexture, TextureView, TextureViewDescriptor,
+};
 
 use core::num::NonZeroU16;
 use std::iter;
 
-//= RENDERER =================================================================
+//= RENDERER =======================================================================================
 
 pub struct Renderer {
     surface: Surface<'static>,
@@ -118,7 +121,7 @@ impl Renderer {
         Limits::default().max_storage_buffer_binding_size
     }
 
-    //= ENCODER AND SUBMIT PASS ==============================================
+    //= ENCODER AND SUBMIT PASS ====================================================================
 
     pub fn create_command_encoder(&self) -> CommandEncoder {
         self.device
@@ -129,7 +132,7 @@ impl Renderer {
         self.queue.submit(iter::once(command_buffer));
     }
 
-    //= BUFFERS ==============================================================
+    //= BUFFERS ====================================================================================
 
     pub fn write_camera(&self, camera: &Camera) {
         self.buffers.camera_buffer.write(&self.queue, camera);
@@ -157,7 +160,7 @@ impl Renderer {
         self.buffers.frame_count.write(&self.queue, frame_data);
     }
 
-    //= RESIZE AND SCALE =====================================================
+    //= RESIZE AND SCALE ===========================================================================
 
     pub fn resize(&mut self, width: NonZeroU16, height: NonZeroU16) {
         let width = width.get();
@@ -201,27 +204,7 @@ impl Renderer {
         self.reset_frame_counter();
     }
 
-    /*
-            pub fn scale(&mut self, factor: f64) {
-            let width = match NonZeroU32::new((self.surface_width as f64 / factor) as u32) {
-                None => {
-                    log::warn!("[scale] surface_size.width is zero");
-                    NonZeroU32::new(1).unwrap()
-                }
-                Some(w) => w,
-            };
-            let height = match NonZeroU32::new((self.surface_height as f64 / factor) as u32) {
-                None => {
-                    log::warn!("[scale] surface_size.height is zero");
-                    NonZeroU32::new(1).unwrap()
-                }
-                Some(h) => h,
-            };
-            self.resize(width, height)
-        }
-    */
-
-    //= UPDATE ===============================================================
+    //= UPDATE =====================================================================================
 
     pub const fn reset_frame_counter(&mut self) {
         self.frame_data.reset();
@@ -275,7 +258,7 @@ impl Renderer {
         Ok(())
     }
 
-    //= SURFACE TEXTURE ======================================================
+    //= SURFACE TEXTURE ============================================================================
 
     pub const fn surface_size(&self) -> U16Vec2 {
         U16Vec2::new(
@@ -285,22 +268,23 @@ impl Renderer {
     }
 
     pub fn get_output(&self) -> (SurfaceTexture, TextureView) {
+        #[allow(clippy::needless_pass_by_value)]
         fn panic_error(current: CurrentSurfaceTexture) -> ! {
             panic!("Failed to get the current texture: {current:?}");
         }
 
         let output = match self.surface.get_current_texture() {
             CurrentSurfaceTexture::Success(o) => o,
-            CurrentSurfaceTexture::Suboptimal(_) | CurrentSurfaceTexture::Outdated | CurrentSurfaceTexture::Lost | CurrentSurfaceTexture::Validation => {
-                match self.surface.get_current_texture() {
-                    CurrentSurfaceTexture::Success(o) => o,
-                    c => panic_error(c)
-                }
+            CurrentSurfaceTexture::Suboptimal(_)
+            | CurrentSurfaceTexture::Outdated
+            | CurrentSurfaceTexture::Lost
+            | CurrentSurfaceTexture::Validation => match self.surface.get_current_texture() {
+                CurrentSurfaceTexture::Success(o) => o,
+                c => panic_error(c),
             },
-            CurrentSurfaceTexture::Timeout |
-            CurrentSurfaceTexture::Occluded => {
+            CurrentSurfaceTexture::Timeout | CurrentSurfaceTexture::Occluded => {
                 panic_error(CurrentSurfaceTexture::Occluded)
-            },
+            }
         };
 
         let view = output

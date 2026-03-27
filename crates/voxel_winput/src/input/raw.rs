@@ -1,4 +1,4 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use crate::has_flag;
 
@@ -17,7 +17,7 @@ use windows_sys::Win32::{
 use core::ffi;
 use std::mem;
 
-//= GET KEYBOARD PHYSICAL KEY (took from winit 0.29.15) ======================
+//= GET KEYBOARD PHYSICAL KEY (took from winit 0.29.15) ============================================
 
 /*pub fn get_keyboard_physical_key(keyboard: RAWKEYBOARD) -> Option<KeyCode> {
     let extension = {

@@ -1,18 +1,18 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use glam::Vec4;
 
-// = COLOR ===================================================================
+// = COLOR =========================================================================================
 
 #[derive(Clone, Copy, Debug)]
 pub struct Color(Vec4);
 
 impl Color {
-    pub const N_COLORS: u16 = 4;
+    pub const N_CHANNELS: u16 = 4;
 
     pub const GAMMA: f32 = 2.2;
 
-    pub const MIN_VALUE: u8 = 0;
+    pub const MIN_VALUE: u8 = u8::MIN;
     pub const MAX_VALUE: u8 = u8::MAX;
 
     pub const MIN_OPAQUE: u8 = u8::MIN;
@@ -100,26 +100,11 @@ impl Color {
             self.a().powf(Self::GAMMA),
         ]
     }
-
-    //- Names ----------------------------------------------------------------
-
-    pub const BLACK: Self = Self::new(0.0, 0.0, 0.0, 1.0);
-    pub const BLACK_TRANSPARENT: Self = Self::new(0.0, 0.0, 0.0, 0.0);
-    pub const WHITE: Self = Self::new(1.0, 1.0, 1.0, 1.0);
-    pub const WHITE_TRANSPARENT: Self = Self::new(1.0, 1.0, 1.0, 0.0);
-    pub const RED: Self = Self::new(1.0, 0.0, 0.0, 1.0);
-    pub const GREEN: Self = Self::new(0.0, 1.0, 0.0, 1.0);
-    pub const BLUE: Self = Self::new(0.0, 0.0, 1.0, 1.0);
-
-    // https://en.wikipedia.org/wiki/Shades_of_brown
-    pub const BROWN_BEAVER: Self = Self::new(159.0 / 255.0, 129.0 / 255.0, 112.0 / 255.0, 1.0);
-    pub const BROWN_DARK: Self = Self::new(92.0 / 255.0, 64.0 / 255.0, 51.0 / 255.0, 1.0);
-    pub const BROWN_PALE: Self = Self::new(152.0 / 255.0, 118.0 / 255.0, 84.0 / 255.0, 1.0);
 }
 
 impl Default for Color {
     fn default() -> Self {
-        Self::BLACK
+        Self::new(0.0, 0.0, 0.0, 1.0) // Black
     }
 }
 
