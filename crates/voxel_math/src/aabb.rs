@@ -1,12 +1,40 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ============================================================================================================
 
 use glam::Vec3;
 
-//= CONSTANTS ================================================================
+//= CONSTANTS ==========================================================================================================
 
 const EPSILON: f32 = 0.00001;
 
-//= AABB =====================================================================
+//= MACROS =============================================================================================================
+
+macro_rules! clip_axis_body {
+    ($self:ident, $c:ident, $a:ident; move=$axis:ident, check=$b:ident, $c_axis:ident) => {{
+        if $c.to.$b <= $self.from.$b || $c.from.$b >= $self.to.$b {
+            return $a;
+        }
+        if $c.to.$c_axis <= $self.from.$c_axis || $c.from.$c_axis >= $self.to.$c_axis {
+            return $a;
+        }
+
+        if $a > 0.0 && $c.to.$axis <= $self.from.$axis {
+            let max = $self.from.$axis - $c.to.$axis - EPSILON;
+            if max < $a {
+                $a = max;
+            }
+        }
+        if $a < 0.0 && $c.from.$axis >= $self.to.$axis {
+            let max = $self.to.$axis - $c.from.$axis + EPSILON;
+            if max > $a {
+                $a = max;
+            }
+        }
+
+        $a
+    }};
+}
+
+//= AABB ===============================================================================================================
 
 #[derive(Clone, Copy)]
 pub struct Aabb {

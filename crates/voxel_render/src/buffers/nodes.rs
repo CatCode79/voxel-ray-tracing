@@ -120,12 +120,12 @@ impl Node {
 
 pub struct NodesBuffer {
     pub buf: Buffer,
-    pub count: u32,
+    pub count: u64,
 }
 
 impl NodesBuffer {
     #[must_use]
-    pub fn new(device: &Device, label: &str, usage: BufferUsages, count: u32) -> Self {
+    pub fn new(device: &Device, label: &str, usage: BufferUsages, count: u64) -> Self {
         let buf = device.create_buffer(&BufferDescriptor {
             label: Some(label),
             size: u64::from(count) * size_of::<Node>() as u64,

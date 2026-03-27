@@ -9,10 +9,7 @@ use crate::{Buffers, Camera, FrameData, Material, Node, Settings, WorldData};
 
 use glam::U16Vec2;
 use raw_window_handle as rwh;
-use wgpu::{
-    CommandBuffer, CommandEncoder, CommandEncoderDescriptor, Device, Limits, Queue, Surface,
-    SurfaceConfiguration, SurfaceError, SurfaceTexture, TextureView, TextureViewDescriptor,
-};
+use wgpu::{CommandBuffer, CommandEncoder, CommandEncoderDescriptor, CurrentSurfaceTexture, Device, Limits, Queue, Surface, SurfaceConfiguration, SurfaceTexture, TextureView, TextureViewDescriptor};
 
 use core::num::NonZeroU16;
 use std::iter;
@@ -44,7 +41,7 @@ impl Renderer {
         raw_window_handle: Result<rwh::RawWindowHandle, rwh::HandleError>,
         surface_width: u16,
         surface_height: u16,
-        max_nodes: u32,
+        max_nodes: u64,
         _sample_count: u8,
     ) -> Result<Self, String> {
         let instance = create_instance();
@@ -117,7 +114,7 @@ impl Renderer {
     }
 
     #[must_use]
-    pub fn max_buffer_sizes() -> u32 {
+    pub fn max_buffer_sizes() -> u64 {
         Limits::default().max_storage_buffer_binding_size
     }
 
@@ -232,7 +229,7 @@ impl Renderer {
 
     pub fn update(&mut self, camera: Camera) -> Result<(), String> {
         profiling::scope!("Renderer.update()");
-        let (output_texture, output_view) = self.get_output().map_err(|e| e.to_string())?;
+        let (output_texture, output_view) = self.get_output();
         let surface_size = self.surface_size();
         let mut encoder = self.create_command_encoder();
 
@@ -287,11 +284,28 @@ impl Renderer {
         )
     }
 
-    pub fn get_output(&self) -> Result<(SurfaceTexture, TextureView), SurfaceError> {
-        let output = self.surface.get_current_texture()?;
+    pub fn get_output(&self) -> (SurfaceTexture, TextureView) {
+        fn panic_error(current: CurrentSurfaceTexture) -> ! {
+            panic!("Failed to get the current texture: {current:?}");
+        }
+
+        let output = match self.surface.get_current_texture() {
+            CurrentSurfaceTexture::Success(o) => o,
+            CurrentSurfaceTexture::Suboptimal(_) | CurrentSurfaceTexture::Outdated | CurrentSurfaceTexture::Lost | CurrentSurfaceTexture::Validation => {
+                match self.surface.get_current_texture() {
+                    CurrentSurfaceTexture::Success(o) => o,
+                    c => panic_error(c)
+                }
+            },
+            CurrentSurfaceTexture::Timeout |
+            CurrentSurfaceTexture::Occluded => {
+                panic_error(CurrentSurfaceTexture::Occluded)
+            },
+        };
+
         let view = output
             .texture
             .create_view(&TextureViewDescriptor::default());
-        Ok((output, view))
+        (output, view)
     }
 }

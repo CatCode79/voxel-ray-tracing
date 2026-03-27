@@ -27,8 +27,8 @@ num_cpus = "1"
 pollster = "0.4"
 profiling = { version = "1", default-features = false , features = ["profile-with-tracy"]}
 raw-window-handle = "0.6"
-wgpu = { version = "28", default-features = false, features = ["wgsl", "dx12", "vulkan"] }
-wgt = { version = "28", package = "wgpu-types"}
+wgpu = { version = "29", default-features = false, features = ["wgsl", "dx12", "vulkan"] }
+wgt = { version = "29", package = "wgpu-types"}
 
 [workspace.lints.clippy]
 cargo = { level = "warn", priority = -1 }

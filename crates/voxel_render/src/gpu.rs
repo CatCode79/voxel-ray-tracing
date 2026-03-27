@@ -58,7 +58,7 @@ fn get_adapter_info(adapter: &Adapter) -> String {
 
 //= DEVICE AND QUEUE =========================================================
 
-pub fn request_device(adapter: &Adapter, max_buffer_sizes: u32) -> Result<(Device, Queue), String> {
+pub fn request_device(adapter: &Adapter, max_buffer_sizes: u64) -> Result<(Device, Queue), String> {
     let dq = async {
         adapter
             .request_device(&DeviceDescriptor {
@@ -98,9 +98,11 @@ pub fn create_instance() -> Instance {
     let desc = InstanceDescriptor {
         backends: supported_backends(),
         flags,
-        ..Default::default()
+        memory_budget_thresholds: Default::default(),
+        backend_options: Default::default(),
+        display: None,
     };
-    Instance::new(&desc)
+    Instance::new(desc)
 }
 
 //= SURFACE ==================================================================
@@ -118,7 +120,7 @@ pub fn create_surface(
     }
 
     let surface_target = SurfaceTargetUnsafe::RawHandle {
-        raw_display_handle: raw_display_handle.unwrap(),
+        raw_display_handle: Some(raw_display_handle.unwrap()),
         raw_window_handle: raw_window_handle.unwrap(),
     };
     let surface = match unsafe { instance.create_surface_unsafe(surface_target) } {

@@ -69,7 +69,7 @@ pub struct Buffers {
 }
 
 impl Buffers {
-    pub(crate) fn new(device: &Device, max_nodes: u32) -> Self {
+    pub(crate) fn new(device: &Device, max_nodes: u64) -> Self {
         const COPY_DST: BufferUsages = BufferUsages::COPY_DST;
         const UNIFORM: BufferUsages = BufferUsages::UNIFORM;
         const STORAGE: BufferUsages = BufferUsages::STORAGE;

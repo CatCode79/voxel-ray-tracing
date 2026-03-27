@@ -28,7 +28,7 @@ struct FoundNode {
 pub struct World {
     pub min: IVec3,
     pub size: u32,
-    pub max_nodes: u32,
+    pub max_nodes: u64,
     pub max_depth: u32,
     start_search: u32,
     last_used_node: u32,
@@ -40,8 +40,8 @@ pub struct World {
 
 /// Create and clear worlds
 impl World {
-    pub fn new(max_buffer_sizes: u32) -> Self {
-        let max_nodes = max_buffer_sizes / size_of::<Node>() as u32;
+    pub fn new(max_buffer_sizes: u64) -> Self {
+        let max_nodes = max_buffer_sizes / size_of::<Node>() as u64;
         let world_depth = 9;
         let world_size = 1 << world_depth;
 

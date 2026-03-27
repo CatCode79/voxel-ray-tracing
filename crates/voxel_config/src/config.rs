@@ -1,10 +1,10 @@
-//= IMPORTS ==================================================================
+//= IMPORTS ========================================================================================
 
 use nanoserde::{DeJson, SerJson};
 
 use std::fs::{read_to_string, write};
 
-//= CONSTANTS ================================================================
+//= CONSTANTS ======================================================================================
 
 // The shortest width reported by Steam HW Survey page to 2023 is 1024x768.
 const MIN_WIDTH: u16 = 1920 / 2;
@@ -12,7 +12,7 @@ const MIN_WIDTH: u16 = 1920 / 2;
 // The shortest height reported by Steam HW Survey page to 2023 is 1280x720.
 const MIN_HEIGHT: u16 = 1080 / 2;
 
-//= CONFIG ===================================================================
+//= CONFIG =========================================================================================
 
 /// Object with game configurations.
 #[derive(Debug, DeJson, SerJson)]
@@ -27,7 +27,7 @@ pub struct Config {
 }
 
 impl Config {
-    //- Load -----------------------------------------------------------------
+    //- Load ---------------------------------------------------------------------------------------
 
     /// Loads a config file, path is chosen internally by some default paths.
     /// Returns a config object or error otherwise.
@@ -57,7 +57,7 @@ impl Config {
         })
     }
 
-    //- Save -----------------------------------------------------------------
+    //- Save ---------------------------------------------------------------------------------------
 
     /// Saves a config file, path is chosen internally by some default paths.
     /// An error is returned if something went wrong.
